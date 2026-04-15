@@ -26,3 +26,5 @@ export const useAuthStore = create<AuthState>()(
     { name: 'auth-storage', partialize: (s) => ({ user: s.user, accessToken: s.accessToken }) }
   )
 );
+
+export const useIsAdmin = () => useAuthStore((s) => s.user?.role === 'admin');

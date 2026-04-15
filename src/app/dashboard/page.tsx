@@ -1,35 +1,52 @@
 'use client';
 import Link from 'next/link';
-import { Mail, Users, CheckCircle, Eye, Plus } from 'lucide-react';
+import { Mail, Users, CheckCircle, Eye, Plus, ShieldCheck } from 'lucide-react';
 import { useInvitations } from '@/hooks/useInvitations';
-import { useAuthStore } from '@/store/auth.store';
+import { useAdminDashboard } from '@/hooks/useAdmin';
+import { useAuthStore, useIsAdmin } from '@/store/auth.store';
 import { StatCard } from '@/components/dashboard/StatCard';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { Badge } from '@/components/ui/Badge';
 import Button from '@/components/ui/Button';
 import { formatDate } from '@/lib/utils';
 
-export default function DashboardPage() {
-  const { user } = useAuthStore();
-  const { data: invitations, isLoading } = useInvitations();
+function AdminOverview() {
+  const { data: stats, isLoading } = useAdminDashboard();
 
+  return (
+    <div className="space-y-6">
+      {isLoading ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {Array.from({ length: 4 }).map((_, i) => <Skeleton key={i} className="h-24" />)}
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <StatCard label="Total User" value={stats?.totalUsers ?? 0} icon={Users} color="text-blue-500" />
+          <StatCard label="Total Undangan" value={stats?.totalInvitations ?? 0} icon={Mail} color="text-rose-500" />
+          <StatCard label="Dipublikasikan" value={stats?.published ?? 0} icon={Eye} color="text-green-500" />
+          <StatCard label="Draft" value={stats?.draft ?? 0} icon={CheckCircle} color="text-yellow-500" />
+        </div>
+      )}
+
+      <div className="flex gap-3">
+        <Link href="/dashboard/invitations">
+          <Button variant="secondary" size="sm"><Mail className="h-4 w-4" />Semua Undangan</Button>
+        </Link>
+        <Link href="/dashboard/users">
+          <Button variant="secondary" size="sm"><ShieldCheck className="h-4 w-4" />Kelola Users</Button>
+        </Link>
+      </div>
+    </div>
+  );
+}
+
+function UserOverview() {
+  const { data: invitations, isLoading } = useInvitations();
   const published = invitations?.filter((i) => i.status === 'published').length ?? 0;
   const draft = invitations?.filter((i) => i.status === 'draft').length ?? 0;
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">
-            Selamat datang{user?.name ? `, ${user.name}` : ''} 👋
-          </h1>
-          <p className="text-gray-500 text-sm mt-1">Kelola undangan pernikahan digital Anda</p>
-        </div>
-        <Link href="/dashboard/invitations/create">
-          <Button><Plus className="h-4 w-4" />Buat Undangan</Button>
-        </Link>
-      </div>
-
       {isLoading ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {Array.from({ length: 4 }).map((_, i) => <Skeleton key={i} className="h-24" />)}
@@ -48,7 +65,6 @@ export default function DashboardPage() {
           <h2 className="text-lg font-semibold text-gray-900">Undangan Terbaru</h2>
           <Link href="/dashboard/invitations" className="text-sm text-rose-500 hover:underline">Lihat semua</Link>
         </div>
-
         {isLoading ? (
           <div className="space-y-3">
             {Array.from({ length: 3 }).map((_, i) => <Skeleton key={i} className="h-16" />)}
@@ -78,6 +94,40 @@ export default function DashboardPage() {
           </div>
         )}
       </div>
+    </div>
+  );
+}
+
+export default function DashboardPage() {
+  const { user } = useAuthStore();
+  const isAdmin = useIsAdmin();
+
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <div className="flex items-center gap-2">
+            <h1 className="text-2xl font-bold text-gray-900">
+              Selamat datang{user?.name ? `, ${user.name}` : ''} 👋
+            </h1>
+            {isAdmin && (
+              <span className="inline-flex items-center gap-1 text-xs font-medium bg-rose-100 text-rose-600 px-2 py-0.5 rounded-full">
+                <ShieldCheck className="h-3 w-3" />Admin
+              </span>
+            )}
+          </div>
+          <p className="text-gray-500 text-sm mt-1">
+            {isAdmin ? 'Kelola seluruh sistem undangan pernikahan' : 'Kelola undangan pernikahan digital Anda'}
+          </p>
+        </div>
+        {!isAdmin && (
+          <Link href="/dashboard/invitations/create">
+            <Button><Plus className="h-4 w-4" />Buat Undangan</Button>
+          </Link>
+        )}
+      </div>
+
+      {isAdmin ? <AdminOverview /> : <UserOverview />}
     </div>
   );
 }

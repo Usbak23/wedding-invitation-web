@@ -1,23 +1,25 @@
 'use client';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { LayoutDashboard, Mail, Users, BarChart2, LogOut, Heart, X } from 'lucide-react';
+import { LayoutDashboard, Mail, Users, BarChart2, LogOut, Heart, X, ShieldCheck } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { useAuthStore } from '@/store/auth.store';
+import { useAuthStore, useIsAdmin } from '@/store/auth.store';
 import { useUIStore } from '@/store/ui.store';
-
-const navItems = [
-  { href: '/dashboard', label: 'Overview', icon: LayoutDashboard },
-  { href: '/dashboard/invitations', label: 'Undangan', icon: Mail },
-  { href: '/dashboard/guests', label: 'Tamu', icon: Users },
-  { href: '/dashboard/analytics', label: 'Analitik', icon: BarChart2 },
-];
 
 export default function Sidebar() {
   const pathname = usePathname();
   const router = useRouter();
   const { user, clearAuth } = useAuthStore();
   const { sidebarOpen, setSidebarOpen } = useUIStore();
+  const isAdmin = useIsAdmin();
+
+  const navItems = [
+    { href: '/dashboard', label: 'Overview', icon: LayoutDashboard },
+    { href: '/dashboard/invitations', label: 'Undangan', icon: Mail },
+    { href: '/dashboard/guests', label: 'Tamu', icon: Users },
+    { href: '/dashboard/analytics', label: 'Analitik', icon: BarChart2 },
+    ...(isAdmin ? [{ href: '/dashboard/users', label: 'Users', icon: ShieldCheck }] : []),
+  ];
 
   const handleLogout = () => {
     clearAuth();

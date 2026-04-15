@@ -21,7 +21,7 @@ export default function LoginPage() {
     setLoading(true);
     try {
       const data = await authService.login(form);
-      setAuth(data.access_token);
+      setAuth(data.access_token, data.user);
       router.push('/dashboard');
     } catch {
       setError('Email atau password salah.');
