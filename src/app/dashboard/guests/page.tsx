@@ -46,7 +46,14 @@ function GuestList({ invitationId }: { invitationId: string }) {
               <div className="flex items-center gap-2">
                 <span className="text-xs font-mono bg-gray-100 px-2 py-1 rounded">{g.code}</span>
                 {g.rsvp && (
-                  <span className="text-xs text-green-600 font-medium">{g.rsvp}</span>
+                  <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${
+                    g.rsvp.status === 'hadir' ? 'bg-green-100 text-green-700' :
+                    g.rsvp.status === 'tidak' ? 'bg-red-100 text-red-700' :
+                    'bg-yellow-100 text-yellow-700'
+                  }`}>
+                    {g.rsvp.status === 'hadir' ? `Hadir (${g.rsvp.total_persons} org)` :
+                     g.rsvp.status === 'tidak' ? 'Tidak Hadir' : 'Mungkin'}
+                  </span>
                 )}
               </div>
             </div>

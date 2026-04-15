@@ -6,7 +6,13 @@ export interface Guest {
   name: string;
   code: string;
   phone?: string;
-  rsvp: string | null;
+  rsvp: {
+    id: string;
+    status: string;
+    total_persons: number;
+    message: string | null;
+    created_at: string;
+  } | null;
   created_at: string;
 }
 
