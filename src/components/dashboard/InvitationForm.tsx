@@ -14,19 +14,6 @@ interface InvitationFormProps {
   loading?: boolean;
 }
 
-const toLocalDatetime = (iso: string | null | undefined) => {
-  if (!iso) return '';
-  const d = new Date(iso);
-  if (isNaN(d.getTime())) return '';
-  return d.toISOString().slice(0, 16);
-};
-
-const toISO = (v: string | null | undefined) => {
-  if (!v) return null;
-  const d = new Date(v);
-  return isNaN(d.getTime()) ? null : d.toISOString();
-};
-
 export default function InvitationForm({ defaultValues, onSubmit, loading }: InvitationFormProps) {
   const router = useRouter();
   const [form, setForm] = useState({
@@ -34,8 +21,12 @@ export default function InvitationForm({ defaultValues, onSubmit, loading }: Inv
     bride_name: defaultValues?.bride_name ?? '',
     akad_date: defaultValues?.akad_date ?? '',
     akad_location: defaultValues?.akad_location ?? '',
+    akad_maps_url: defaultValues?.akad_maps_url ?? '',
     resepsi_date: defaultValues?.resepsi_date ?? '',
     resepsi_location: defaultValues?.resepsi_location ?? '',
+    resepsi_maps_url: defaultValues?.resepsi_maps_url ?? '',
+    cover_photo: defaultValues?.cover_photo ?? '',
+    music_url: defaultValues?.music_url ?? '',
     custom_message: defaultValues?.custom_message ?? '',
   });
   const [error, setError] = useState('');
@@ -52,8 +43,12 @@ export default function InvitationForm({ defaultValues, onSubmit, loading }: Inv
         bride_name: form.bride_name,
         akad_date: form.akad_date || null,
         akad_location: form.akad_location || null,
+        akad_maps_url: form.akad_maps_url || null,
         resepsi_date: form.resepsi_date || null,
         resepsi_location: form.resepsi_location || null,
+        resepsi_maps_url: form.resepsi_maps_url || null,
+        cover_photo: form.cover_photo || null,
+        music_url: form.music_url || null,
         custom_message: form.custom_message || null,
       };
       await onSubmit(payload);
@@ -72,6 +67,8 @@ export default function InvitationForm({ defaultValues, onSubmit, loading }: Inv
             <Input label="Nama Mempelai Pria *" value={form.groom_name} onChange={set('groom_name')} required />
             <Input label="Nama Mempelai Wanita *" value={form.bride_name} onChange={set('bride_name')} required />
           </div>
+          <Input label="Cover Photo URL" value={form.cover_photo} onChange={set('cover_photo')} placeholder="https://..." />
+          <Input label="Music URL" value={form.music_url} onChange={set('music_url')} placeholder="https://..." />
           <div className="flex flex-col gap-1">
             <label className="text-sm font-medium text-gray-700">Pesan Undangan</label>
             <textarea
@@ -90,6 +87,7 @@ export default function InvitationForm({ defaultValues, onSubmit, loading }: Inv
         <CardContent className="space-y-4">
           <DateTimePicker label="Tanggal & Waktu" value={form.akad_date} onChange={(v) => setForm((f) => ({ ...f, akad_date: v }))} />
           <Input label="Lokasi" value={form.akad_location} onChange={set('akad_location')} />
+          <Input label="Google Maps URL" value={form.akad_maps_url} onChange={set('akad_maps_url')} placeholder="https://maps.google.com/..." />
         </CardContent>
       </Card>
 
@@ -98,6 +96,7 @@ export default function InvitationForm({ defaultValues, onSubmit, loading }: Inv
         <CardContent className="space-y-4">
           <DateTimePicker label="Tanggal & Waktu" value={form.resepsi_date} onChange={(v) => setForm((f) => ({ ...f, resepsi_date: v }))} />
           <Input label="Lokasi" value={form.resepsi_location} onChange={set('resepsi_location')} />
+          <Input label="Google Maps URL" value={form.resepsi_maps_url} onChange={set('resepsi_maps_url')} placeholder="https://maps.google.com/..." />
         </CardContent>
       </Card>
 
