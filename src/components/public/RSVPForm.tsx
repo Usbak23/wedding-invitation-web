@@ -11,18 +11,66 @@ const options: { value: RSVPStatus; label: string; emoji: string }[] = [
   { value: 'mungkin', label: 'Mungkin', emoji: '🤔' },
 ];
 
+const statusLabel: Record<RSVPStatus, string> = {
+  hadir: 'Hadir',
+  tidak: 'Tidak Hadir',
+  mungkin: 'Mungkin Hadir',
+};
+
+const statusColor: Record<RSVPStatus, string> = {
+  hadir: 'text-green-600 bg-green-50 border-green-200',
+  tidak: 'text-red-500 bg-red-50 border-red-200',
+  mungkin: 'text-yellow-600 bg-yellow-50 border-yellow-200',
+};
+
+interface ExistingRSVP {
+  id: string;
+  status: string;
+  total_persons: number;
+  message: string | null;
+}
+
 interface RSVPFormProps {
   guestId: string;
   invitationId: string;
   guestName: string;
+  existingRsvp?: ExistingRSVP | null;
 }
 
-export default function RSVPForm({ guestId, invitationId, guestName }: RSVPFormProps) {
+export default function RSVPForm({ guestId, invitationId, guestName, existingRsvp }: RSVPFormProps) {
   const { mutateAsync, isPending, isSuccess } = useCreateRSVP();
   const [status, setStatus] = useState<RSVPStatus | ''>('');
   const [message, setMessage] = useState('');
   const [totalPersons, setTotalPersons] = useState(1);
   const [error, setError] = useState('');
+
+  // Already submitted (from backend)
+  if (existingRsvp && !isSuccess) {
+    const s = existingRsvp.status as RSVPStatus;
+    return (
+      <div className="text-center py-6 space-y-3">
+        <p className="text-4xl">✅</p>
+        <p className="text-lg font-semibold text-gray-900">Kamu sudah mengisi RSVP, {guestName}!</p>
+        <div className={cn('inline-flex items-center gap-2 px-4 py-2 rounded-full border text-sm font-medium', statusColor[s])}>
+          {options.find((o) => o.value === s)?.emoji} {statusLabel[s]}
+          {s === 'hadir' && ` · ${existingRsvp.total_persons} orang`}
+        </div>
+        {existingRsvp.message && (
+          <p className="text-gray-500 text-sm italic">"{existingRsvp.message}"</p>
+        )}
+      </div>
+    );
+  }
+
+  if (isSuccess) {
+    return (
+      <div className="text-center py-8">
+        <p className="text-4xl mb-3">💌</p>
+        <p className="text-xl font-semibold text-gray-900">Terima kasih, {guestName}!</p>
+        <p className="text-gray-500 mt-1">RSVP Anda telah kami terima.</p>
+      </div>
+    );
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -40,16 +88,6 @@ export default function RSVPForm({ guestId, invitationId, guestName }: RSVPFormP
       setError('Gagal mengirim RSVP. Coba lagi.');
     }
   };
-
-  if (isSuccess) {
-    return (
-      <div className="text-center py-8">
-        <p className="text-4xl mb-3">💌</p>
-        <p className="text-xl font-semibold text-gray-900">Terima kasih, {guestName}!</p>
-        <p className="text-gray-500 mt-1">RSVP Anda telah kami terima.</p>
-      </div>
-    );
-  }
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">

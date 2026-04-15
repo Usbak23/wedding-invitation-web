@@ -140,6 +140,7 @@ export default function PublicInvitationPage({ params }: { params: Promise<{ slu
               guestId={guestData.guest.id}
               invitationId={invitation.id}
               guestName={guestData.guest.name}
+              existingRsvp={guestData.guest.rsvp}
             />
           )}
         </div>
