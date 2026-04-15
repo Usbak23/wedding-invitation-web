@@ -6,8 +6,12 @@ export type InvitationPayload = {
   bride_name: string;
   akad_date?: string | null;
   akad_location?: string | null;
+  akad_maps_url?: string | null;
   resepsi_date?: string | null;
   resepsi_location?: string | null;
+  resepsi_maps_url?: string | null;
+  cover_photo?: string | null;
+  music_url?: string | null;
   custom_message?: string | null;
 };
 

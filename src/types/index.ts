@@ -36,6 +36,7 @@ export interface Invitation {
   resepsi_maps_url?: string;
   cover_photo?: string;
   music_url?: string;
+  music_url?: string;
   template?: string;
   custom_message?: string;
   created_at: string;
