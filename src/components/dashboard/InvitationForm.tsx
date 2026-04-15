@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Button from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
+import DateTimePicker from '@/components/ui/DateTimePicker';
 import { Card, CardContent, CardHeader } from '@/components/ui/Card';
 import type { Invitation } from '@/types';
 import type { InvitationPayload } from '@/services/invitation.service';
@@ -31,9 +32,9 @@ export default function InvitationForm({ defaultValues, onSubmit, loading }: Inv
   const [form, setForm] = useState({
     groom_name: defaultValues?.groom_name ?? '',
     bride_name: defaultValues?.bride_name ?? '',
-    akad_date: toLocalDatetime(defaultValues?.akad_date),
+    akad_date: defaultValues?.akad_date ?? '',
     akad_location: defaultValues?.akad_location ?? '',
-    resepsi_date: toLocalDatetime(defaultValues?.resepsi_date),
+    resepsi_date: defaultValues?.resepsi_date ?? '',
     resepsi_location: defaultValues?.resepsi_location ?? '',
     custom_message: defaultValues?.custom_message ?? '',
   });
@@ -49,9 +50,9 @@ export default function InvitationForm({ defaultValues, onSubmit, loading }: Inv
       const payload: InvitationPayload = {
         groom_name: form.groom_name,
         bride_name: form.bride_name,
-        akad_date: toISO(form.akad_date),
+        akad_date: form.akad_date || null,
         akad_location: form.akad_location || null,
-        resepsi_date: toISO(form.resepsi_date),
+        resepsi_date: form.resepsi_date || null,
         resepsi_location: form.resepsi_location || null,
         custom_message: form.custom_message || null,
       };
@@ -87,7 +88,7 @@ export default function InvitationForm({ defaultValues, onSubmit, loading }: Inv
       <Card>
         <CardHeader><p className="font-semibold text-gray-900">Akad Nikah</p></CardHeader>
         <CardContent className="space-y-4">
-          <Input label="Tanggal & Waktu" type="datetime-local" value={form.akad_date} onChange={set('akad_date')} />
+          <DateTimePicker label="Tanggal & Waktu" value={form.akad_date} onChange={(v) => setForm((f) => ({ ...f, akad_date: v }))} />
           <Input label="Lokasi" value={form.akad_location} onChange={set('akad_location')} />
         </CardContent>
       </Card>
@@ -95,7 +96,7 @@ export default function InvitationForm({ defaultValues, onSubmit, loading }: Inv
       <Card>
         <CardHeader><p className="font-semibold text-gray-900">Resepsi</p></CardHeader>
         <CardContent className="space-y-4">
-          <Input label="Tanggal & Waktu" type="datetime-local" value={form.resepsi_date} onChange={set('resepsi_date')} />
+          <DateTimePicker label="Tanggal & Waktu" value={form.resepsi_date} onChange={(v) => setForm((f) => ({ ...f, resepsi_date: v }))} />
           <Input label="Lokasi" value={form.resepsi_location} onChange={set('resepsi_location')} />
         </CardContent>
       </Card>
