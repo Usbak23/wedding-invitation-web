@@ -18,13 +18,15 @@ export default function Countdown({ targetDate }: { targetDate: string }) {
   ];
 
   return (
-    <div className="flex gap-4 justify-center">
-      {units.map(({ label, value }) => (
+    <div className="flex gap-3 justify-center">
+      {units.map(({ label, value }, i) => (
         <div key={label} className="flex flex-col items-center">
-          <div className="w-16 h-16 rounded-xl bg-white/20 backdrop-blur flex items-center justify-center text-2xl font-bold text-white">
-            {String(value).padStart(2, '0')}
+          <div className="w-16 h-16 md:w-20 md:h-20 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center shadow-lg">
+            <span className="text-2xl md:text-3xl font-bold text-white tabular-nums">
+              {String(value).padStart(2, '0')}
+            </span>
           </div>
-          <span className="text-xs text-white/80 mt-1">{label}</span>
+          <span className="text-white/60 text-xs mt-2 tracking-wider uppercase">{label}</span>
         </div>
       ))}
     </div>

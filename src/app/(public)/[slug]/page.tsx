@@ -6,6 +6,7 @@ import { usePublicInvitation, useGuestByCode } from '@/hooks/usePublicInvitation
 import { useRSVPs } from '@/hooks/useRSVP';
 import Countdown from '@/components/public/Countdown';
 import RSVPForm from '@/components/public/RSVPForm';
+import MusicPlayer from '@/components/public/MusicPlayer';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { formatDate } from '@/lib/utils';
 
@@ -20,21 +21,19 @@ export default function PublicInvitationPage({ params }: { params: Promise<{ slu
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 p-6 space-y-4">
-        <Skeleton className="h-64 w-full rounded-2xl" />
-        <Skeleton className="h-32 w-full rounded-2xl" />
-        <Skeleton className="h-48 w-full rounded-2xl" />
+      <div className="min-h-screen bg-stone-50 p-6 space-y-4">
+        <Skeleton className="h-screen w-full rounded-none" />
       </div>
     );
   }
 
   if (isError || !invitation) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="text-center">
-          <p className="text-6xl mb-4">💔</p>
-          <h1 className="text-2xl font-bold text-gray-900">Undangan tidak ditemukan</h1>
-          <p className="text-gray-500 mt-2">Link undangan mungkin sudah tidak aktif.</p>
+      <div className="min-h-screen flex items-center justify-center bg-stone-50">
+        <div className="text-center animate-fade-in-up">
+          <p className="text-7xl mb-6">💔</p>
+          <h1 className="font-serif text-3xl text-gray-900 mb-2">Undangan tidak ditemukan</h1>
+          <p className="text-gray-500">Link undangan mungkin sudah tidak aktif.</p>
         </div>
       </div>
     );
@@ -43,129 +42,236 @@ export default function PublicInvitationPage({ params }: { params: Promise<{ slu
   const wishes = rsvps?.filter((r) => r.message) ?? [];
 
   return (
-    <div className="min-h-screen bg-stone-50">
+    <div className="min-h-screen" style={{ fontFamily: "'Inter', sans-serif" }}>
+      {invitation.music_url && <MusicPlayer url={invitation.music_url} />}
+
       {/* Hero */}
       <section
-        className="relative min-h-screen flex flex-col items-center justify-center text-center px-6 py-20"
+        className="relative min-h-screen flex flex-col items-center justify-center text-center px-6 py-24 overflow-hidden"
         style={{
           background: invitation.cover_photo
-            ? `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url(${invitation.cover_photo}) center/cover`
-            : 'linear-gradient(135deg, #be123c 0%, #9f1239 50%, #881337 100%)',
+            ? `linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.4)), url(${invitation.cover_photo}) center/cover fixed`
+            : 'linear-gradient(160deg, #4c0519 0%, #881337 40%, #9f1239 70%, #be123c 100%)',
         }}
       >
-        {guestData && (
-          <p className="text-white/70 text-sm mb-2">Kepada Yth. <span className="font-semibold text-white">{guestData.guest.name}</span></p>
-        )}
-        <p className="text-white/80 text-sm tracking-widest uppercase mb-4">Undangan Pernikahan</p>
-        <div className="flex items-center gap-4 mb-2">
-          <div className="h-px w-16 bg-white/40" />
-          <Heart className="h-5 w-5 text-white fill-white" />
-          <div className="h-px w-16 bg-white/40" />
+        {/* Decorative elements */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-10 left-10 w-32 h-32 border border-white/10 rounded-full" />
+          <div className="absolute top-20 left-20 w-16 h-16 border border-white/10 rounded-full" />
+          <div className="absolute bottom-10 right-10 w-40 h-40 border border-white/10 rounded-full" />
+          <div className="absolute bottom-20 right-20 w-20 h-20 border border-white/10 rounded-full" />
         </div>
-        <h1 className="text-4xl md:text-6xl font-bold text-white mt-4 leading-tight">
-          {invitation.groom_name}
-          <span className="block text-2xl md:text-3xl font-light my-2 text-white/80">&amp;</span>
-          {invitation.bride_name}
-        </h1>
-        {invitation.custom_message && (
-          <p className="text-white/70 mt-4 text-sm max-w-md italic">"{invitation.custom_message}"</p>
-        )}
-        <p className="text-white/80 mt-6 text-lg">{formatDate(invitation.resepsi_date)}</p>
-        <div className="mt-10">
-          <Countdown targetDate={invitation.resepsi_date} />
+
+        <div className="relative z-10 max-w-2xl mx-auto">
+          {guestData && (
+            <p className="text-white/60 text-sm mb-3 animate-fade-in">
+              Kepada Yth. <span className="text-white font-medium">{guestData.guest.name}</span>
+            </p>
+          )}
+
+          <p className="text-white/70 text-xs tracking-[0.3em] uppercase mb-6 animate-fade-in animate-delay-100">
+            — Undangan Pernikahan —
+          </p>
+
+          <div className="flex items-center justify-center gap-4 mb-6 animate-fade-in animate-delay-200">
+            <div className="h-px flex-1 max-w-16 bg-gradient-to-r from-transparent to-white/40" />
+            <Heart className="h-5 w-5 text-rose-300 fill-rose-300 animate-float" />
+            <div className="h-px flex-1 max-w-16 bg-gradient-to-l from-transparent to-white/40" />
+          </div>
+
+          <h1 className="animate-fade-in-up animate-delay-200" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+            <span className="block text-5xl md:text-7xl font-semibold text-white leading-tight">
+              {invitation.groom_name}
+            </span>
+            <span className="block text-2xl md:text-3xl text-white/60 font-light italic my-3">
+              &amp; 
+            </span>
+            <span className="block text-5xl md:text-7xl font-semibold text-white leading-tight">
+              {invitation.bride_name}
+            </span>
+          </h1>
+
+          {invitation.custom_message && (
+            <p className="text-white/60 mt-6 text-sm max-w-sm mx-auto leading-relaxed italic animate-fade-in animate-delay-300">
+              "{invitation.custom_message}"
+            </p>
+          )}
+
+          <div className="mt-4 animate-fade-in animate-delay-300">
+            <p className="text-white/70 text-sm">{formatDate(invitation.resepsi_date)}</p>
+          </div>
+
+          <div className="mt-10 animate-fade-in-up animate-delay-400">
+            <Countdown targetDate={invitation.resepsi_date} />
+          </div>
+
+          {/* Scroll indicator */}
+          <div className="mt-16 animate-bounce animate-delay-500">
+            <div className="w-6 h-10 border-2 border-white/30 rounded-full mx-auto flex items-start justify-center pt-1.5">
+              <div className="w-1 h-2 bg-white/50 rounded-full" />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Bismillah / Opening */}
+      <section className="bg-stone-50 py-16 px-6 text-center">
+        <div className="max-w-xl mx-auto">
+          <p className="text-gray-400 text-xs tracking-widest uppercase mb-4">Dengan memohon rahmat dan ridho Allah SWT</p>
+          <div className="w-16 h-px bg-rose-300 mx-auto mb-4" />
+          <p className="text-gray-600 text-sm leading-relaxed">
+            Kami mengundang Bapak/Ibu/Saudara/i untuk hadir dan memberikan doa restu pada pernikahan putra-putri kami.
+          </p>
         </div>
       </section>
 
       {/* Event Details */}
-      <section className="max-w-2xl mx-auto px-6 py-16 space-y-8">
-        <h2 className="text-2xl font-bold text-center text-gray-900">Detail Acara</h2>
+      <section className="bg-white py-16 px-6">
+        <div className="max-w-2xl mx-auto">
+          <div className="text-center mb-10">
+            <p className="text-xs tracking-widest uppercase text-rose-400 mb-2">Acara</p>
+            <h2 className="font-serif text-3xl text-gray-900">Detail Acara</h2>
+          </div>
 
-        {invitation.akad_date && (
-          <div className="bg-white rounded-2xl border border-gray-200 p-6 space-y-3">
-            <h3 className="font-semibold text-rose-600 text-lg">Akad Nikah</h3>
-            <div className="flex items-start gap-3 text-gray-600">
-              <Calendar className="h-5 w-5 mt-0.5 shrink-0 text-gray-400" />
-              <p>{formatDate(invitation.akad_date)}</p>
-            </div>
-            {invitation.akad_location && (
-              <div className="flex items-start gap-3 text-gray-600">
-                <MapPin className="h-5 w-5 mt-0.5 shrink-0 text-gray-400" />
-                <p>{invitation.akad_location}</p>
+          <div className="grid md:grid-cols-2 gap-6">
+            {invitation.akad_date && (
+              <div className="relative rounded-2xl border border-rose-100 bg-rose-50/50 p-6 overflow-hidden">
+                <div className="absolute top-0 right-0 w-24 h-24 bg-rose-100 rounded-full -translate-y-1/2 translate-x-1/2 opacity-50" />
+                <div className="relative">
+                  <div className="w-10 h-10 rounded-xl bg-rose-100 flex items-center justify-center mb-4">
+                    <Heart className="h-5 w-5 text-rose-500 fill-rose-500" />
+                  </div>
+                  <h3 className="font-semibold text-gray-900 text-lg mb-3">Akad Nikah</h3>
+                  <div className="space-y-2">
+                    <div className="flex items-start gap-2 text-gray-600 text-sm">
+                      <Calendar className="h-4 w-4 mt-0.5 shrink-0 text-rose-400" />
+                      <p>{formatDate(invitation.akad_date)}</p>
+                    </div>
+                    {invitation.akad_location && (
+                      <div className="flex items-start gap-2 text-gray-600 text-sm">
+                        <MapPin className="h-4 w-4 mt-0.5 shrink-0 text-rose-400" />
+                        <p>{invitation.akad_location}</p>
+                      </div>
+                    )}
+                  </div>
+                  {invitation.akad_maps_url && (
+                    <a href={invitation.akad_maps_url} target="_blank" rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 mt-3 text-xs text-rose-500 font-medium hover:underline">
+                      <MapPin className="h-3 w-3" />Buka Maps
+                    </a>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {invitation.resepsi_date && (
+              <div className="relative rounded-2xl border border-pink-100 bg-pink-50/50 p-6 overflow-hidden">
+                <div className="absolute top-0 right-0 w-24 h-24 bg-pink-100 rounded-full -translate-y-1/2 translate-x-1/2 opacity-50" />
+                <div className="relative">
+                  <div className="w-10 h-10 rounded-xl bg-pink-100 flex items-center justify-center mb-4">
+                    <Calendar className="h-5 w-5 text-pink-500" />
+                  </div>
+                  <h3 className="font-semibold text-gray-900 text-lg mb-3">Resepsi</h3>
+                  <div className="space-y-2">
+                    <div className="flex items-start gap-2 text-gray-600 text-sm">
+                      <Calendar className="h-4 w-4 mt-0.5 shrink-0 text-pink-400" />
+                      <p>{formatDate(invitation.resepsi_date)}</p>
+                    </div>
+                    {invitation.resepsi_location && (
+                      <div className="flex items-start gap-2 text-gray-600 text-sm">
+                        <MapPin className="h-4 w-4 mt-0.5 shrink-0 text-pink-400" />
+                        <p>{invitation.resepsi_location}</p>
+                      </div>
+                    )}
+                  </div>
+                  {invitation.resepsi_maps_url && (
+                    <a href={invitation.resepsi_maps_url} target="_blank" rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 mt-3 text-xs text-pink-500 font-medium hover:underline">
+                      <MapPin className="h-3 w-3" />Buka Maps
+                    </a>
+                  )}
+                </div>
               </div>
             )}
           </div>
-        )}
 
-        {invitation.resepsi_date && (
-          <div className="bg-white rounded-2xl border border-gray-200 p-6 space-y-3">
-            <h3 className="font-semibold text-rose-600 text-lg">Resepsi</h3>
-            <div className="flex items-start gap-3 text-gray-600">
-              <Calendar className="h-5 w-5 mt-0.5 shrink-0 text-gray-400" />
-              <p>{formatDate(invitation.resepsi_date)}</p>
+          {/* Maps embed */}
+          {invitation.resepsi_location && (
+            <div className="mt-6 rounded-2xl overflow-hidden h-56 border border-gray-100 shadow-sm">
+              <iframe
+                src={`https://maps.google.com/maps?q=${encodeURIComponent(invitation.resepsi_location)}&output=embed`}
+                className="w-full h-full border-0"
+                loading="lazy"
+              />
             </div>
-            {invitation.resepsi_location && (
-              <div className="flex items-start gap-3 text-gray-600">
-                <MapPin className="h-5 w-5 mt-0.5 shrink-0 text-gray-400" />
-                <p>{invitation.resepsi_location}</p>
-              </div>
-            )}
-            {invitation.resepsi_location && (
-              <div className="mt-3 rounded-xl overflow-hidden h-48">
-                <iframe
-                  src={`https://maps.google.com/maps?q=${encodeURIComponent(invitation.resepsi_location)}&output=embed`}
-                  className="w-full h-full border-0"
-                  loading="lazy"
-                />
-              </div>
-            )}
-          </div>
-        )}
+          )}
+        </div>
       </section>
 
       {/* RSVP */}
-      <section className="max-w-2xl mx-auto px-6 pb-16">
-        <div className="bg-white rounded-2xl border border-gray-200 p-6">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">Konfirmasi Kehadiran</h2>
-          {!code ? (
-            <div className="text-center py-4">
-              <p className="text-gray-500 text-sm">Buka link undangan dengan kode tamu untuk mengisi RSVP.</p>
-              <p className="text-gray-400 text-xs mt-1">Contoh: /{slug}?code=XXXXXXXX</p>
-            </div>
-          ) : guestLoading ? (
-            <Skeleton className="h-32" />
-          ) : guestError || !guestData ? (
-            <p className="text-center text-sm text-red-500">Kode tamu tidak valid.</p>
-          ) : (
-            <RSVPForm
-              guestId={guestData.guest.id}
-              invitationId={invitation.id}
-              guestName={guestData.guest.name}
-              existingRsvp={guestData.guest.rsvp}
-            />
-          )}
+      <section className="bg-stone-50 py-16 px-6">
+        <div className="max-w-lg mx-auto">
+          <div className="text-center mb-8">
+            <p className="text-xs tracking-widest uppercase text-rose-400 mb-2">Konfirmasi</p>
+            <h2 className="font-serif text-3xl text-gray-900">Kehadiran Anda</h2>
+          </div>
+          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
+            {!code ? (
+              <div className="text-center py-6">
+                <div className="w-14 h-14 rounded-2xl bg-gray-50 flex items-center justify-center mx-auto mb-4">
+                  <Heart className="h-7 w-7 text-gray-300" />
+                </div>
+                <p className="text-gray-500 text-sm">Buka link undangan dengan kode tamu untuk mengisi RSVP.</p>
+                <p className="text-gray-400 text-xs mt-1">/{slug}?code=XXXXXXXX</p>
+              </div>
+            ) : guestLoading ? (
+              <Skeleton className="h-32" />
+            ) : guestError || !guestData ? (
+              <p className="text-center text-sm text-red-500 py-4">Kode tamu tidak valid.</p>
+            ) : (
+              <RSVPForm
+                guestId={guestData.guest.id}
+                invitationId={invitation.id}
+                guestName={guestData.guest.name}
+                existingRsvp={guestData.guest.rsvp}
+              />
+            )}
+          </div>
         </div>
       </section>
 
       {/* Wishes */}
       {wishes.length > 0 && (
-        <section className="max-w-2xl mx-auto px-6 pb-16">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">Ucapan &amp; Doa</h2>
-          <div className="space-y-4">
-            {wishes.map((r) => (
-              <div key={r.id} className="bg-white rounded-xl border border-gray-200 p-4">
-                <p className="font-medium text-gray-900 text-sm">{r.guest_name}</p>
-                <p className="text-gray-600 text-sm mt-1">{r.message}</p>
-              </div>
-            ))}
+        <section className="bg-white py-16 px-6">
+          <div className="max-w-2xl mx-auto">
+            <div className="text-center mb-8">
+              <p className="text-xs tracking-widest uppercase text-rose-400 mb-2">Doa &amp; Harapan</p>
+              <h2 className="font-serif text-3xl text-gray-900">Ucapan Tamu</h2>
+            </div>
+            <div className="grid md:grid-cols-2 gap-4">
+              {wishes.map((r) => (
+                <div key={r.id} className="bg-stone-50 rounded-2xl p-5 border border-stone-100">
+                  <div className="flex items-center gap-2 mb-3">
+                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-rose-400 to-pink-500 flex items-center justify-center text-white text-xs font-bold">
+                      {r.guest_name?.[0]?.toUpperCase() ?? '?'}
+                    </div>
+                    <p className="font-medium text-gray-900 text-sm">{r.guest_name}</p>
+                  </div>
+                  <p className="text-gray-600 text-sm leading-relaxed italic">"{r.message}"</p>
+                </div>
+              ))}
+            </div>
           </div>
         </section>
       )}
 
-      <footer className="text-center py-8 text-sm text-gray-400 border-t border-gray-200">
-        <div className="flex items-center justify-center gap-1">
-          <Heart className="h-3.5 w-3.5 text-rose-400 fill-rose-400" />
-          <span>Dibuat dengan WeddingInvite</span>
-        </div>
+      {/* Footer */}
+      <footer className="bg-stone-900 text-center py-10 px-6">
+        <Heart className="h-5 w-5 text-rose-400 fill-rose-400 mx-auto mb-3" />
+        <p className="font-serif text-xl text-white mb-1">{invitation.groom_name} & {invitation.bride_name}</p>
+        <p className="text-stone-500 text-xs mt-4 flex items-center justify-center gap-1">
+          Dibuat dengan <Heart className="h-3 w-3 text-rose-500 fill-rose-500" /> WeddingInvite
+        </p>
       </footer>
     </div>
   );

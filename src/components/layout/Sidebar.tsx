@@ -28,65 +28,72 @@ export default function Sidebar() {
 
   return (
     <>
-      {/* Mobile overlay */}
       {sidebarOpen && (
-        <div className="fixed inset-0 z-20 bg-black/50 lg:hidden" onClick={() => setSidebarOpen(false)} />
+        <div className="fixed inset-0 z-20 bg-black/40 backdrop-blur-sm lg:hidden" onClick={() => setSidebarOpen(false)} />
       )}
 
-      <aside
-        className={cn(
-          'fixed inset-y-0 left-0 z-30 flex w-64 flex-col bg-white border-r border-gray-200 transition-transform duration-200',
-          sidebarOpen ? 'translate-x-0' : '-translate-x-full',
-          'lg:translate-x-0 lg:static lg:z-auto'
-        )}
-      >
+      <aside className={cn(
+        'fixed inset-y-0 left-0 z-30 flex w-64 flex-col bg-white border-r border-gray-100 transition-transform duration-300 ease-in-out',
+        sidebarOpen ? 'translate-x-0' : '-translate-x-full',
+        'lg:translate-x-0 lg:static lg:z-auto'
+      )}>
         {/* Logo */}
-        <div className="flex items-center justify-between px-6 py-5 border-b border-gray-100">
-          <div className="flex items-center gap-2">
-            <Heart className="h-5 w-5 text-rose-500 fill-rose-500" />
-            <span className="font-semibold text-gray-900">WeddingInvite</span>
+        <div className="flex items-center justify-between px-5 py-5 border-b border-gray-100">
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-rose-500 to-pink-600 flex items-center justify-center shadow-sm">
+              <Heart className="h-4 w-4 text-white fill-white" />
+            </div>
+            <span className="font-bold text-gray-900 tracking-tight">WeddingInvite</span>
           </div>
-          <button className="lg:hidden" onClick={() => setSidebarOpen(false)}>
-            <X className="h-5 w-5 text-gray-500" />
+          <button className="lg:hidden p-1 rounded-lg hover:bg-gray-100 transition-colors" onClick={() => setSidebarOpen(false)}>
+            <X className="h-4 w-4 text-gray-500" />
           </button>
         </div>
 
         {/* Nav */}
-        <nav className="flex-1 px-3 py-4 space-y-1">
+        <nav className="flex-1 px-3 py-4 space-y-0.5 overflow-y-auto">
+          {isAdmin && (
+            <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider px-3 mb-2">Admin</p>
+          )}
           {navItems.map(({ href, label, icon: Icon }) => {
             const active = pathname === href || (href !== '/dashboard' && pathname.startsWith(href));
             return (
-              <Link
-                key={href}
-                href={href}
+              <Link key={href} href={href}
                 className={cn(
-                  'flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors',
-                  active ? 'bg-rose-50 text-rose-600' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
-                )}
-              >
-                <Icon className="h-4 w-4" />
+                  'flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-150 group',
+                  active
+                    ? 'bg-rose-50 text-rose-600'
+                    : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                )}>
+                <div className={cn(
+                  'w-7 h-7 rounded-lg flex items-center justify-center transition-all',
+                  active ? 'bg-rose-100' : 'bg-gray-100 group-hover:bg-gray-200'
+                )}>
+                  <Icon className="h-3.5 w-3.5" />
+                </div>
                 {label}
+                {active && <div className="ml-auto w-1.5 h-1.5 rounded-full bg-rose-500" />}
               </Link>
             );
           })}
         </nav>
 
-        {/* User */}
-        <div className="border-t border-gray-100 px-3 py-4">
-          <div className="flex items-center gap-3 px-3 py-2 mb-1">
-            <div className="h-8 w-8 rounded-full bg-rose-100 flex items-center justify-center text-rose-600 text-sm font-semibold">
+        {/* User section */}
+        <div className="border-t border-gray-100 p-3">
+          <div className="flex items-center gap-3 px-2 py-2 rounded-xl mb-1">
+            <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-rose-400 to-pink-500 flex items-center justify-center text-white text-sm font-bold shadow-sm shrink-0">
               {user?.name?.[0]?.toUpperCase() ?? 'U'}
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-gray-900 truncate">{user?.name}</p>
-              <p className="text-xs text-gray-500 truncate">{user?.email}</p>
+              <p className="text-sm font-semibold text-gray-900 truncate">{user?.name ?? 'User'}</p>
+              <p className="text-xs text-gray-400 truncate">{user?.email}</p>
             </div>
           </div>
-          <button
-            onClick={handleLogout}
-            className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors"
-          >
-            <LogOut className="h-4 w-4" />
+          <button onClick={handleLogout}
+            className="flex w-full items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium text-gray-500 hover:bg-red-50 hover:text-red-600 transition-all duration-150 group">
+            <div className="w-7 h-7 rounded-lg bg-gray-100 group-hover:bg-red-100 flex items-center justify-center transition-all">
+              <LogOut className="h-3.5 w-3.5" />
+            </div>
             Keluar
           </button>
         </div>
