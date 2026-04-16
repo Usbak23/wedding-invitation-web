@@ -42,7 +42,7 @@ export default function RegisterPage() {
 
         <div className="relative z-10 text-center animate-fade-in-up">
           <div className="flex items-center justify-center gap-2 mb-8">
-            <Image src="/Brand.png" alt="WeddingInvite" width={160} height={40} className="object-contain brightness-0 invert" priority />
+            <Image src="/Brand.png" alt="WeddingInvite" width={220} height={110} className="object-contain brightness-0 invert" style={{ width: 220, height: 110 }} priority />
           </div>
           <h2 className="font-serif text-5xl leading-tight mb-4">
             Mulai Perjalanan<br />
@@ -71,7 +71,7 @@ export default function RegisterPage() {
       <div className="flex-1 flex items-center justify-center px-6 py-12 bg-gray-50">
         <div className="w-full max-w-md animate-fade-in-up">
           <div className="flex items-center justify-center mb-8 lg:hidden">
-            <Image src="/Brand.png" alt="WeddingInvite" width={140} height={36} className="object-contain" priority />
+            <Image src="/Brand.png" alt="WeddingInvite" width={140} height={70} className="object-contain" style={{ width: 140, height: 70 }} priority />
           </div>
 
           <div className="mb-8">

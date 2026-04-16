@@ -43,7 +43,7 @@ export default function Sidebar() {
         {/* Logo */}
         <div className="flex items-center justify-between px-5 py-5 border-b border-gray-100">
           <div className="flex items-center">
-            <Image src="/Brand.png" alt="WeddingInvite" width={140} height={36} className="object-contain" priority />
+            <Image src="/Brand.png" alt="WeddingInvite" width={160} height={80} className="object-contain" style={{ width: 160, height: 80 }} priority />
           </div>
           <button className="lg:hidden p-1 rounded-lg hover:bg-gray-100 transition-colors" onClick={() => setSidebarOpen(false)}>
             <X className="h-4 w-4 text-gray-500" />

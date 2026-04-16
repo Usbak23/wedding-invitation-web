@@ -4,7 +4,7 @@ import Providers from '@/components/Providers';
 import { Toaster } from 'react-hot-toast';
 
 export const metadata: Metadata = {
-  title: 'WeddingInvite - Undangan Pernikahan Digital',
+  title: 'AMTech - Undangan Pernikahan Digital',
   description: 'Buat undangan pernikahan digital yang indah dan mudah',
 };
 
