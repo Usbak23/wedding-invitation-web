@@ -1,20 +1,29 @@
 'use client';
 import { useState } from 'react';
-import { Users, Plus } from 'lucide-react';
+import { Users, Plus, QrCode } from 'lucide-react';
 import { useInvitations } from '@/hooks/useInvitations';
 import { useGuests, useCreateGuest } from '@/hooks/useGuests';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { Card, CardContent, CardHeader } from '@/components/ui/Card';
 import Pagination from '@/components/ui/Pagination';
+import QRModal from '@/components/ui/QRModal';
 import Button from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
+import type { Guest } from '@/services/guest.service';
+import type { Invitation } from '@/types';
 
-function GuestList({ invitationId }: { invitationId: string }) {
+interface QRTarget {
+  guest: Guest;
+  slug: string;
+}
+
+function GuestList({ invitation }: { invitation: Invitation }) {
   const [page, setPage] = useState(1);
-  const { data, isLoading } = useGuests(invitationId, page);
-  const { mutateAsync, isPending } = useCreateGuest(invitationId);
+  const { data, isLoading } = useGuests(invitation.id, page);
+  const { mutateAsync, isPending } = useCreateGuest(invitation.id);
   const [form, setForm] = useState({ name: '', phone: '' });
   const [open, setOpen] = useState(false);
+  const [qrTarget, setQrTarget] = useState<QRTarget | null>(null);
 
   const handleAdd = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -27,60 +36,80 @@ function GuestList({ invitationId }: { invitationId: string }) {
 
   const guests = data?.data ?? [];
   const meta = data?.meta;
+  const baseUrl = typeof window !== 'undefined' ? window.location.origin : '';
 
   return (
-    <div className="space-y-3">
-      {open && (
-        <form onSubmit={handleAdd} className="flex gap-2 items-end p-3 bg-rose-50 rounded-xl border border-rose-100">
-          <Input label="Nama" value={form.name} onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))} required />
-          <Input label="No. HP" value={form.phone} onChange={(e) => setForm((f) => ({ ...f, phone: e.target.value }))} />
-          <Button type="submit" loading={isPending} size="sm">Simpan</Button>
-          <Button type="button" variant="secondary" size="sm" onClick={() => setOpen(false)}>Batal</Button>
-        </form>
+    <>
+      {qrTarget && (
+        <QRModal
+          open={!!qrTarget}
+          guestName={qrTarget.guest.name}
+          guestPhone={qrTarget.guest.phone}
+          invitationUrl={`${baseUrl}/${qrTarget.slug}?code=${qrTarget.guest.code}`}
+          onClose={() => setQrTarget(null)}
+        />
       )}
 
-      {guests.length === 0 ? (
-        <p className="text-sm text-gray-400 py-6 text-center">Belum ada tamu</p>
-      ) : (
-        <>
-          <div className="divide-y divide-gray-50">
-            {guests.map((g) => (
-              <div key={g.id} className="flex items-center justify-between py-3">
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-rose-400 to-pink-500 flex items-center justify-center text-white text-xs font-bold shrink-0">
-                    {g.name[0].toUpperCase()}
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium text-gray-900">{g.name}</p>
-                    {g.phone && <p className="text-xs text-gray-400">{g.phone}</p>}
-                  </div>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-xs font-mono bg-gray-100 text-gray-600 px-2 py-1 rounded-lg">{g.code}</span>
-                  {g.rsvp && (
-                    <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${
-                      g.rsvp.status === 'hadir' ? 'bg-green-100 text-green-700' :
-                      g.rsvp.status === 'tidak' ? 'bg-red-100 text-red-700' :
-                      'bg-yellow-100 text-yellow-700'
-                    }`}>
-                      {g.rsvp.status === 'hadir' ? `Hadir (${g.rsvp.total_persons})` :
-                       g.rsvp.status === 'tidak' ? 'Tidak Hadir' : 'Mungkin'}
-                    </span>
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
-          {meta && <Pagination page={page} totalPages={meta.totalPages} onChange={setPage} />}
-        </>
-      )}
+      <div className="space-y-3">
+        {open && (
+          <form onSubmit={handleAdd} className="flex gap-2 items-end p-3 bg-rose-50 rounded-xl border border-rose-100">
+            <Input label="Nama" value={form.name} onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))} required />
+            <Input label="No. HP" value={form.phone} onChange={(e) => setForm((f) => ({ ...f, phone: e.target.value }))} />
+            <Button type="submit" loading={isPending} size="sm">Simpan</Button>
+            <Button type="button" variant="secondary" size="sm" onClick={() => setOpen(false)}>Batal</Button>
+          </form>
+        )}
 
-      {!open && (
-        <Button variant="ghost" size="sm" onClick={() => setOpen(true)}>
-          <Plus className="h-4 w-4" />Tambah Tamu
-        </Button>
-      )}
-    </div>
+        {guests.length === 0 ? (
+          <p className="text-sm text-gray-400 py-6 text-center">Belum ada tamu</p>
+        ) : (
+          <>
+            <div className="divide-y divide-gray-50">
+              {guests.map((g) => (
+                <div key={g.id} className="flex items-center justify-between py-3">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-rose-400 to-pink-500 flex items-center justify-center text-white text-xs font-bold shrink-0">
+                      {g.name[0].toUpperCase()}
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-gray-900">{g.name}</p>
+                      {g.phone && <p className="text-xs text-gray-400">{g.phone}</p>}
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs font-mono bg-gray-100 text-gray-600 px-2 py-1 rounded-lg">{g.code}</span>
+                    {g.rsvp && (
+                      <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${
+                        g.rsvp.status === 'hadir' ? 'bg-green-100 text-green-700' :
+                        g.rsvp.status === 'tidak' ? 'bg-red-100 text-red-700' :
+                        'bg-yellow-100 text-yellow-700'
+                      }`}>
+                        {g.rsvp.status === 'hadir' ? `Hadir (${g.rsvp.total_persons})` :
+                         g.rsvp.status === 'tidak' ? 'Tidak Hadir' : 'Mungkin'}
+                      </span>
+                    )}
+                    <button
+                      onClick={() => setQrTarget({ guest: g, slug: invitation.slug })}
+                      className="p-1.5 rounded-lg hover:bg-rose-50 text-gray-400 hover:text-rose-500 transition-colors"
+                      title="QR Code & Share"
+                    >
+                      <QrCode className="h-4 w-4" />
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+            {meta && <Pagination page={page} totalPages={meta.totalPages} onChange={setPage} />}
+          </>
+        )}
+
+        {!open && (
+          <Button variant="ghost" size="sm" onClick={() => setOpen(true)}>
+            <Plus className="h-4 w-4" />Tambah Tamu
+          </Button>
+        )}
+      </div>
+    </>
   );
 }
 
@@ -117,7 +146,7 @@ export default function GuestsPage() {
                 </div>
               </CardHeader>
               <CardContent>
-                <GuestList invitationId={inv.id} />
+                <GuestList invitation={inv} />
               </CardContent>
             </Card>
           ))}
