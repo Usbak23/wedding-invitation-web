@@ -1,29 +1,25 @@
 'use client';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/store/auth.store';
+import { authService } from '@/services/auth.service';
 import Sidebar from '@/components/layout/Sidebar';
 import Topbar from '@/components/layout/Topbar';
-import { useSyncExternalStore } from 'react';
-
-function useHydrated() {
-  return useSyncExternalStore(
-    () => () => {},
-    () => true,
-    () => false
-  );
-}
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
-  const { accessToken } = useAuthStore();
-  const hydrated = useHydrated();
+  const { user, setUser } = useAuthStore();
+  const [checking, setChecking] = useState(true);
 
   useEffect(() => {
-    if (hydrated && !accessToken) router.replace('/login');
-  }, [hydrated, accessToken, router]);
+    if (user) { setChecking(false); return; }
+    authService.me()
+      .then((u) => { setUser(u); setChecking(false); })
+      .catch(() => { setChecking(false); router.replace('/login'); });
+  }, []);
 
-  if (!hydrated || !accessToken) return null;
+  if (checking) return null;
+  if (!user) return null;
 
   return (
     <div className="flex h-screen overflow-hidden bg-gray-50">

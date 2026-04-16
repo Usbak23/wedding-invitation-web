@@ -3,15 +3,18 @@ import type { User, LoginPayload, RegisterPayload, ApiResponse } from '@/types';
 
 export const authService = {
   login: async (payload: LoginPayload) => {
-    const res = await api.post<ApiResponse<{ access_token: string }>>('/auth/login', payload);
-    const { access_token } = res.data.data;
-    // Fetch full profile to get name
-    const profileRes = await api.get<ApiResponse<User>>('/auth/me', {
-      headers: { Authorization: `Bearer ${access_token}` },
-    });
-    return { access_token, user: profileRes.data.data };
+    // Backend sets httpOnly cookie, we just fetch user profile
+    await api.post('/auth/login', payload);
+    const profileRes = await api.get<ApiResponse<User>>('/auth/me');
+    return profileRes.data.data;
   },
 
   register: (payload: RegisterPayload) =>
     api.post<ApiResponse<User>>('/auth/register', payload).then((r) => r.data.data),
+
+  me: () =>
+    api.get<ApiResponse<User>>('/auth/me').then((r) => r.data.data),
+
+  logout: () =>
+    api.post('/auth/logout'),
 };

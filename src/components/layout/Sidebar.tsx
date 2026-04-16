@@ -2,9 +2,11 @@
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { LayoutDashboard, Mail, Users, BarChart2, LogOut, Heart, X, ShieldCheck } from 'lucide-react';
+import Image from 'next/image';
 import { cn } from '@/lib/utils';
 import { useAuthStore, useIsAdmin } from '@/store/auth.store';
 import { useUIStore } from '@/store/ui.store';
+import { authService } from '@/services/auth.service';
 
 export default function Sidebar() {
   const pathname = usePathname();
@@ -21,7 +23,8 @@ export default function Sidebar() {
     ...(isAdmin ? [{ href: '/dashboard/users', label: 'Users', icon: ShieldCheck }] : []),
   ];
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    await authService.logout().catch(() => {});
     clearAuth();
     router.push('/login');
   };
@@ -39,11 +42,8 @@ export default function Sidebar() {
       )}>
         {/* Logo */}
         <div className="flex items-center justify-between px-5 py-5 border-b border-gray-100">
-          <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-rose-500 to-pink-600 flex items-center justify-center shadow-sm">
-              <Heart className="h-4 w-4 text-white fill-white" />
-            </div>
-            <span className="font-bold text-gray-900 tracking-tight">WeddingInvite</span>
+          <div className="flex items-center">
+            <Image src="/Brand.png" alt="WeddingInvite" width={140} height={36} className="object-contain" priority />
           </div>
           <button className="lg:hidden p-1 rounded-lg hover:bg-gray-100 transition-colors" onClick={() => setSidebarOpen(false)}>
             <X className="h-4 w-4 text-gray-500" />

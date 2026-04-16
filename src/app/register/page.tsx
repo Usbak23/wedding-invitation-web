@@ -2,7 +2,8 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { Heart, Eye, EyeOff } from 'lucide-react';
+import Image from 'next/image';
+import { Eye, EyeOff } from 'lucide-react';
 import { authService } from '@/services/auth.service';
 import { useAuthStore } from '@/store/auth.store';
 import Button from '@/components/ui/Button';
@@ -10,7 +11,7 @@ import Input from '@/components/ui/Input';
 
 export default function RegisterPage() {
   const router = useRouter();
-  const { setAuth } = useAuthStore();
+  const { setUser } = useAuthStore();
   const [form, setForm] = useState({ name: '', email: '', password: '' });
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
@@ -22,8 +23,8 @@ export default function RegisterPage() {
     setLoading(true);
     try {
       await authService.register(form);
-      const loginData = await authService.login({ email: form.email, password: form.password });
-      setAuth(loginData.access_token, loginData.user);
+      const user = await authService.login({ email: form.email, password: form.password });
+      setUser(user);
       router.push('/dashboard');
     } catch {
       setError('Pendaftaran gagal. Email mungkin sudah digunakan.');
@@ -41,8 +42,7 @@ export default function RegisterPage() {
 
         <div className="relative z-10 text-center animate-fade-in-up">
           <div className="flex items-center justify-center gap-2 mb-8">
-            <Heart className="h-8 w-8 fill-white" />
-            <span className="text-2xl font-semibold tracking-wide">WeddingInvite</span>
+            <Image src="/Brand.png" alt="WeddingInvite" width={160} height={40} className="object-contain brightness-0 invert" priority />
           </div>
           <h2 className="font-serif text-5xl leading-tight mb-4">
             Mulai Perjalanan<br />
@@ -70,9 +70,8 @@ export default function RegisterPage() {
       {/* Right form panel */}
       <div className="flex-1 flex items-center justify-center px-6 py-12 bg-gray-50">
         <div className="w-full max-w-md animate-fade-in-up">
-          <div className="flex items-center justify-center gap-2 mb-8 lg:hidden">
-            <Heart className="h-6 w-6 text-rose-500 fill-rose-500" />
-            <span className="text-xl font-semibold text-gray-900">WeddingInvite</span>
+          <div className="flex items-center justify-center mb-8 lg:hidden">
+            <Image src="/Brand.png" alt="WeddingInvite" width={140} height={36} className="object-contain" priority />
           </div>
 
           <div className="mb-8">
