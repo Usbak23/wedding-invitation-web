@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { adminService } from '@/services/admin.service';
+import toast from 'react-hot-toast';
 
 export function useAdminDashboard() {
   return useQuery({ queryKey: ['admin', 'dashboard'], queryFn: adminService.getDashboard });
@@ -17,6 +18,10 @@ export function useDeleteUser() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: (id: string) => adminService.deleteUser(id),
-    onSuccess: () => qc.invalidateQueries({ queryKey: ['admin', 'users'] }),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['admin', 'users'] });
+      toast.success('User berhasil dihapus.');
+    },
+    onError: () => toast.error('Gagal menghapus user.'),
   });
 }

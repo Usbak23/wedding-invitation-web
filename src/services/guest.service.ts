@@ -16,14 +16,15 @@ export interface Guest {
   created_at: string;
 }
 
-interface PaginatedData {
+export interface PaginatedGuests {
   data: Guest[];
   meta: { total: number; page: number; limit: number; totalPages: number };
 }
 
 export const guestService = {
-  getByInvitation: (invitationId: string) =>
-    api.get<ApiResponse<PaginatedData>>(`/invitations/${invitationId}/guests`).then((r) => r.data.data.data),
+  getByInvitation: (invitationId: string, page = 1, limit = 10) =>
+    api.get<ApiResponse<PaginatedGuests>>(`/invitations/${invitationId}/guests`, { params: { page, limit } })
+      .then((r) => r.data.data),
   create: (invitationId: string, payload: { name: string; phone?: string }) =>
     api.post<ApiResponse<Guest>>(`/invitations/${invitationId}/guests`, payload).then((r) => r.data.data),
 };
