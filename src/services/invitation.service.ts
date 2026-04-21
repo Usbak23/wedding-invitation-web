@@ -13,6 +13,7 @@ export type InvitationPayload = {
   cover_photo?: string | null;
   music_url?: string | null;
   custom_message?: string | null;
+  template?: string | null;
 };
 
 interface PaginatedData {

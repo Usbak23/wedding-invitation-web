@@ -8,6 +8,12 @@ import { Card, CardContent, CardHeader } from '@/components/ui/Card';
 import type { Invitation } from '@/types';
 import type { InvitationPayload } from '@/services/invitation.service';
 
+const TEMPLATES = [
+  { id: 'emerald', label: 'Emerald Islamic', desc: 'Hijau zamrud + emas, klasik islami', color: 'from-emerald-700 to-emerald-900' },
+  { id: 'midnight-gold', label: 'Midnight Gold', desc: 'Navy + gold, elegan premium', color: 'from-slate-800 to-yellow-600' },
+  { id: 'sage-garden', label: 'Sage Garden', desc: 'Sage green + cream, natural feminin', color: 'from-stone-400 to-green-700' },
+];
+
 interface InvitationFormProps {
   defaultValues?: Partial<Invitation>;
   onSubmit: (payload: InvitationPayload) => Promise<unknown>;
@@ -28,6 +34,7 @@ export default function InvitationForm({ defaultValues, onSubmit, loading }: Inv
     cover_photo: defaultValues?.cover_photo ?? '',
     music_url: defaultValues?.music_url ?? '',
     custom_message: defaultValues?.custom_message ?? '',
+    template: defaultValues?.template ?? 'emerald',
   });
   const [error, setError] = useState('');
 
@@ -38,7 +45,7 @@ export default function InvitationForm({ defaultValues, onSubmit, loading }: Inv
     e.preventDefault();
     setError('');
     try {
-      const payload: InvitationPayload = {
+      await onSubmit({
         groom_name: form.groom_name,
         bride_name: form.bride_name,
         akad_date: form.akad_date || null,
@@ -50,8 +57,8 @@ export default function InvitationForm({ defaultValues, onSubmit, loading }: Inv
         cover_photo: form.cover_photo || null,
         music_url: form.music_url || null,
         custom_message: form.custom_message || null,
-      };
-      await onSubmit(payload);
+        template: form.template,
+      });
       router.push('/dashboard/invitations');
     } catch {
       setError('Terjadi kesalahan. Coba lagi.');
@@ -60,6 +67,29 @@ export default function InvitationForm({ defaultValues, onSubmit, loading }: Inv
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6 max-w-2xl">
+      {/* Template Picker */}
+      <Card>
+        <CardHeader><p className="font-semibold text-gray-900">Pilih Template</p></CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-3 gap-3">
+            {TEMPLATES.map((t) => (
+              <button
+                key={t.id}
+                type="button"
+                onClick={() => setForm((f) => ({ ...f, template: t.id }))}
+                className={`rounded-xl border-2 p-3 text-left transition-all ${
+                  form.template === t.id ? 'border-rose-500 ring-2 ring-rose-200' : 'border-gray-200 hover:border-gray-300'
+                }`}
+              >
+                <div className={`h-12 rounded-lg bg-gradient-to-br ${t.color} mb-2`} />
+                <p className="text-xs font-semibold text-gray-900">{t.label}</p>
+                <p className="text-xs text-gray-400 mt-0.5">{t.desc}</p>
+              </button>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+
       <Card>
         <CardHeader><p className="font-semibold text-gray-900">Data Pengantin</p></CardHeader>
         <CardContent className="space-y-4">
