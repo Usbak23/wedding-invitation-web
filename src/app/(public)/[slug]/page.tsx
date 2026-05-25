@@ -74,7 +74,9 @@ export default function PublicInvitationPage({ params }: { params: Promise<{ slu
       {!hidden && (
         <OpeningScreen
           groomName={invitation.groom_name}
+          groomNickname={invitation.groom_nickname}
           brideName={invitation.bride_name}
+          brideNickname={invitation.bride_nickname}
           guestName={guestData?.guest.name}
           template={invitation.template}
           onOpen={handleOpen}

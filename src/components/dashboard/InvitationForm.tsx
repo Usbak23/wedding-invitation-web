@@ -26,9 +26,13 @@ export default function InvitationForm({ defaultValues, onSubmit, loading }: Inv
     groom_name: defaultValues?.groom_name ?? '',
     groom_nickname: defaultValues?.groom_nickname ?? '',
     groom_photo: defaultValues?.groom_photo ?? '',
+    groom_bio: defaultValues?.groom_bio ?? '',
+    groom_instagram: defaultValues?.groom_instagram ?? '',
     bride_name: defaultValues?.bride_name ?? '',
     bride_nickname: defaultValues?.bride_nickname ?? '',
     bride_photo: defaultValues?.bride_photo ?? '',
+    bride_bio: defaultValues?.bride_bio ?? '',
+    bride_instagram: defaultValues?.bride_instagram ?? '',
     akad_date: defaultValues?.akad_date ?? '',
     akad_location: defaultValues?.akad_location ?? '',
     akad_maps_url: defaultValues?.akad_maps_url ?? '',
@@ -53,9 +57,13 @@ export default function InvitationForm({ defaultValues, onSubmit, loading }: Inv
         groom_name: form.groom_name,
         groom_nickname: form.groom_nickname || null,
         groom_photo: form.groom_photo || null,
+        groom_bio: form.groom_bio || null,
+        groom_instagram: form.groom_instagram || null,
         bride_name: form.bride_name,
         bride_nickname: form.bride_nickname || null,
         bride_photo: form.bride_photo || null,
+        bride_bio: form.bride_bio || null,
+        bride_instagram: form.bride_instagram || null,
         akad_date: form.akad_date || null,
         akad_location: form.akad_location || null,
         akad_maps_url: form.akad_maps_url || null,
@@ -106,11 +114,15 @@ export default function InvitationForm({ defaultValues, onSubmit, loading }: Inv
             <Input label="Nama Panggilan Pria" value={form.groom_nickname} onChange={set('groom_nickname')} placeholder="cth: Rijal" />
           </div>
           <Input label="Foto Mempelai Pria (URL)" value={form.groom_photo} onChange={set('groom_photo')} placeholder="https://..." />
+          <Input label="Bio Mempelai Pria" value={form.groom_bio} onChange={set('groom_bio')} placeholder="Putra pertama dari Bapak ... dan Ibu ..." />
+          <Input label="Instagram Pria" value={form.groom_instagram} onChange={set('groom_instagram')} placeholder="username (tanpa @)" />
           <div className="grid grid-cols-2 gap-4">
             <Input label="Nama Lengkap Mempelai Wanita *" value={form.bride_name} onChange={set('bride_name')} required />
             <Input label="Nama Panggilan Wanita" value={form.bride_nickname} onChange={set('bride_nickname')} placeholder="cth: Lutfi" />
           </div>
           <Input label="Foto Mempelai Wanita (URL)" value={form.bride_photo} onChange={set('bride_photo')} placeholder="https://..." />
+          <Input label="Bio Mempelai Wanita" value={form.bride_bio} onChange={set('bride_bio')} placeholder="Putri kelima dari Bapak ... dan Ibu ..." />
+          <Input label="Instagram Wanita" value={form.bride_instagram} onChange={set('bride_instagram')} placeholder="username (tanpa @)" />
           <Input label="Cover Photo URL" value={form.cover_photo} onChange={set('cover_photo')} placeholder="https://..." />
           <Input label="Music URL" value={form.music_url} onChange={set('music_url')} placeholder="https://..." />
           <div className="flex flex-col gap-1">

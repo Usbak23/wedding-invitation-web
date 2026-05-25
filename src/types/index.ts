@@ -30,9 +30,13 @@ export interface Invitation {
   groom_name: string;
   groom_nickname?: string;
   groom_photo?: string;
+  groom_bio?: string;
+  groom_instagram?: string;
   bride_name: string;
   bride_nickname?: string;
   bride_photo?: string;
+  bride_bio?: string;
+  bride_instagram?: string;
   akad_date: string;
   akad_location: string;
   akad_maps_url?: string;

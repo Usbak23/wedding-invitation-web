@@ -2,7 +2,9 @@
 
 interface OpeningScreenProps {
   groomName: string;
+  groomNickname?: string;
   brideName: string;
+  brideNickname?: string;
   guestName?: string;
   template?: string | null;
   onOpen: () => void;
@@ -95,7 +97,7 @@ function getPatternSvg(color: string) {
   return `url("data:image/svg+xml,${encoded}")`;
 }
 
-export default function OpeningScreen({ groomName, brideName, guestName, template, onOpen, closing }: OpeningScreenProps) {
+export default function OpeningScreen({ groomName, groomNickname, brideName, brideNickname, guestName, template, onOpen, closing }: OpeningScreenProps) {
   const t = THEME[(template as keyof typeof THEME) ?? 'emerald'] ?? THEME.emerald;
 
   return (
@@ -169,9 +171,9 @@ export default function OpeningScreen({ groomName, brideName, guestName, templat
           {['top-2 left-2', 'top-2 right-2', 'bottom-2 left-2', 'bottom-2 right-2'].map((pos) => (
             <div key={pos} className={`absolute ${pos} w-1.5 h-1.5 rounded-full`} style={{ background: t.accentMuted }} />
           ))}
-          <p className="text-4xl font-bold leading-tight" style={{ color: t.text }}>{groomName}</p>
+          <p className="text-4xl font-bold leading-tight" style={{ color: t.text }}>{brideNickname || brideName}</p>
           <p className="text-lg my-2 font-light italic" style={{ color: t.accentMuted }}>&amp;</p>
-          <p className="text-4xl font-bold leading-tight" style={{ color: t.text }}>{brideName}</p>
+          <p className="text-4xl font-bold leading-tight" style={{ color: t.text }}>{groomNickname || groomName}</p>
         </div>
 
         {/* Guest greeting */}
