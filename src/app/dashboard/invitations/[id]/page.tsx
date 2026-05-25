@@ -47,7 +47,7 @@ export default function InvitationDetailPage({ params }: { params: Promise<{ id:
       <div className="flex items-start justify-between gap-4">
         <div>
           <div className="flex items-center gap-3 mb-1">
-            <h1 className="text-2xl font-bold text-gray-900">{invitation.groom_name} & {invitation.bride_name}</h1>
+            <h1 className="text-2xl font-bold text-gray-900">{invitation.bride_name} & {invitation.groom_name}</h1>
             <Badge variant={invitation.status === 'published' ? 'success' : 'warning'}>
               {invitation.status === 'published' ? 'Dipublikasikan' : 'Draft'}
             </Badge>

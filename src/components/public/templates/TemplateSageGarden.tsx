@@ -4,6 +4,7 @@ import Countdown from '@/components/public/Countdown';
 import RSVPForm from '@/components/public/RSVPForm';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { formatDate } from '@/lib/utils';
+import SaveTheDate from '@/components/public/SaveTheDate';
 import type { PublicInvitation, RSVP } from '@/types';
 import type { Guest } from '@/services/guest.service';
 
@@ -66,9 +67,11 @@ export default function TemplateSageGarden({ invitation, guestData, guestLoading
           <p className="text-white/50 text-xs tracking-[0.4em] uppercase mb-6">— Undangan Pernikahan —</p>
 
           <h1>
-            <span className="block text-5xl md:text-6xl font-bold text-white leading-tight">{invitation.groom_name}</span>
+            <span className="block text-5xl md:text-6xl font-bold text-white leading-tight">{invitation.bride_nickname || invitation.bride_name}</span>
+            {invitation.bride_nickname && <span className="block text-white/40 text-sm mt-1">{invitation.bride_name}</span>}
             <span className="block text-amber-200/70 text-2xl my-3 italic font-light">&amp;</span>
-            <span className="block text-5xl md:text-6xl font-bold text-white leading-tight">{invitation.bride_name}</span>
+            <span className="block text-5xl md:text-6xl font-bold text-white leading-tight">{invitation.groom_nickname || invitation.groom_name}</span>
+            {invitation.groom_nickname && <span className="block text-white/40 text-sm mt-1">{invitation.groom_name}</span>}
           </h1>
 
           {invitation.custom_message && (
@@ -76,9 +79,51 @@ export default function TemplateSageGarden({ invitation, guestData, guestLoading
           )}
 
           <p className="text-white/60 text-sm mt-4">{formatDate(invitation.resepsi_date)}</p>
+          <div className="mt-4">
+            <SaveTheDate
+              groomName={invitation.groom_name}
+              brideName={invitation.bride_name}
+              resepsiDate={invitation.resepsi_date}
+              resepsiLocation={invitation.resepsi_location}
+              className="border-white/30 text-white/70 hover:border-white/60 hover:text-white"
+            />
+          </div>
 
           <div className="mt-10">
             <Countdown targetDate={invitation.resepsi_date} />
+          </div>
+        </div>
+      </section>
+
+      {/* Profil Pengantin */}
+      <section className="py-16 px-6" style={{ background: '#eee8d8' }}>
+        <div className="max-w-2xl mx-auto">
+          <div className="text-center mb-10">
+            <p className="text-stone-400 text-xs tracking-widest uppercase mb-2">Mempelai</p>
+            <h2 className="text-3xl font-bold text-stone-800">Yang Berbahagia</h2>
+            <FloralDivider className="text-stone-400 mt-3" />
+          </div>
+          <div className="grid grid-cols-2 gap-8">
+            <div className="text-center">
+              <div className="w-32 h-32 mx-auto rounded-full border-4 border-stone-300 overflow-hidden mb-4 bg-stone-200">
+                {invitation.bride_photo
+                  ? <img src={invitation.bride_photo} alt={invitation.bride_name} className="w-full h-full object-cover" />
+                  : <div className="w-full h-full flex items-center justify-center text-stone-400 text-4xl">❀</div>
+                }
+              </div>
+              <p className="text-stone-800 font-bold text-xl">{invitation.bride_nickname || invitation.bride_name}</p>
+              {invitation.bride_nickname && <p className="text-stone-400 text-xs mt-1">{invitation.bride_name}</p>}
+            </div>
+            <div className="text-center">
+              <div className="w-32 h-32 mx-auto rounded-full border-4 border-stone-300 overflow-hidden mb-4 bg-stone-200">
+                {invitation.groom_photo
+                  ? <img src={invitation.groom_photo} alt={invitation.groom_name} className="w-full h-full object-cover" />
+                  : <div className="w-full h-full flex items-center justify-center text-stone-400 text-4xl">☽</div>
+                }
+              </div>
+              <p className="text-stone-800 font-bold text-xl">{invitation.groom_nickname || invitation.groom_name}</p>
+              {invitation.groom_nickname && <p className="text-stone-400 text-xs mt-1">{invitation.groom_name}</p>}
+            </div>
           </div>
         </div>
       </section>
@@ -222,7 +267,7 @@ export default function TemplateSageGarden({ invitation, guestData, guestLoading
       {/* Footer */}
       <footer className="py-10 px-6 text-center" style={{ background: '#3d5a3e' }}>
         <p className="text-amber-200/60 text-lg mb-1">❀</p>
-        <p className="text-2xl font-bold text-white">{invitation.groom_name} & {invitation.bride_name}</p>
+        <p className="text-2xl font-bold text-white">{invitation.bride_name} & {invitation.groom_name}</p>
         <FloralDivider className="text-white/30 mt-3 mb-3" />
         <p className="text-white/30 text-xs">Dibuat dengan ♥ WeddingInvite</p>
       </footer>

@@ -10,10 +10,12 @@ interface QRModalProps {
   guestName: string;
   guestPhone?: string;
   invitationUrl: string;
+  groomName?: string;
+  brideName?: string;
   onClose: () => void;
 }
 
-export default function QRModal({ open, guestName, guestPhone, invitationUrl, onClose }: QRModalProps) {
+export default function QRModal({ open, guestName, guestPhone, invitationUrl, groomName, brideName, onClose }: QRModalProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [qrDataUrl, setQrDataUrl] = useState('');
 
@@ -42,7 +44,32 @@ export default function QRModal({ open, guestName, guestPhone, invitationUrl, on
   };
 
   const handleWhatsApp = () => {
-    const message = `Halo ${guestName}! 🎊\n\nKami mengundang kehadiran Anda di acara pernikahan kami.\n\nBuka link undangan Anda di sini:\n${invitationUrl}\n\n_Dengan hormat,_\n_Keluarga Pengantin_ 💍`;
+    const couple = groomName && brideName ? `${brideName} & ${groomName}` : 'Keluarga Pengantin';
+    const message =
+`Kepada Yth.
+Bapak/Ibu/Saudara/i
+${guestName},
+______________________
+
+_Assalamu'alaikum Warahmatullahi Wabarakatuh_
+
+Tanpa mengurangi rasa hormat, perkenankan kami mengundang Bapak/Ibu/Saudara/i, teman sekaligus sahabat, untuk menghadiri acara pernikahan kami.
+
+Berikut link undangan kami selengkapnya:
+_${invitationUrl}_
+
+_Untuk hasil terbaik buka dengan google chrome_
+
+Merupakan suatu kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan untuk hadir dan memberikan doa restu.
+
+Mohon maaf perihal undangan hanya di bagikan melalui pesan ini. Terima kasih banyak atas perhatiannya.
+
+_Wassalamu'alaikum Warahmatullahi Wabarakatuh_
+
+Terima Kasih.
+
+_Salam Hormat_
+_${couple}_`;
     const encoded = encodeURIComponent(message);
     const phone = guestPhone?.replace(/\D/g, '').replace(/^0/, '62');
     const url = phone

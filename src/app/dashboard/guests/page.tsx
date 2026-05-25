@@ -46,6 +46,8 @@ function GuestList({ invitation }: { invitation: Invitation }) {
           guestName={qrTarget.guest.name}
           guestPhone={qrTarget.guest.phone}
           invitationUrl={`${baseUrl}/${qrTarget.slug}?code=${qrTarget.guest.code}`}
+          groomName={invitation.groom_name}
+          brideName={invitation.bride_name}
           onClose={() => setQrTarget(null)}
         />
       )}
@@ -137,10 +139,10 @@ export default function GuestsPage() {
               <CardHeader>
                 <div className="flex items-center gap-3">
                   <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-rose-400 to-pink-500 flex items-center justify-center text-white text-xs font-bold shrink-0">
-                    {inv.groom_name[0]}{inv.bride_name[0]}
+                    {inv.bride_name[0]}{inv.groom_name[0]}
                   </div>
                   <div>
-                    <p className="font-semibold text-gray-900">{inv.groom_name} & {inv.bride_name}</p>
+                    <p className="font-semibold text-gray-900">{inv.bride_name} & {inv.groom_name}</p>
                     <p className="text-xs text-gray-400 mt-0.5">/{inv.slug}</p>
                   </div>
                 </div>

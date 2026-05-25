@@ -28,7 +28,11 @@ export interface Invitation {
   slug: string;
   status: InvitationStatus;
   groom_name: string;
+  groom_nickname?: string;
+  groom_photo?: string;
   bride_name: string;
+  bride_nickname?: string;
+  bride_photo?: string;
   akad_date: string;
   akad_location: string;
   akad_maps_url?: string;

@@ -92,10 +92,10 @@ function UserOverview() {
                 className="flex items-center justify-between px-5 py-4 hover:bg-gray-50 transition-colors border-b border-gray-50 last:border-0">
                 <div className="flex items-center gap-3">
                   <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-rose-400 to-pink-500 flex items-center justify-center text-white text-xs font-bold shrink-0">
-                    {inv.groom_name[0]}{inv.bride_name[0]}
+                    {inv.bride_name[0]}{inv.groom_name[0]}
                   </div>
                   <div>
-                    <p className="font-medium text-gray-900 text-sm">{inv.groom_name} & {inv.bride_name}</p>
+                    <p className="font-medium text-gray-900 text-sm">{inv.bride_name} & {inv.groom_name}</p>
                     <p className="text-xs text-gray-400">{formatDate(inv.resepsi_date)}</p>
                   </div>
                 </div>

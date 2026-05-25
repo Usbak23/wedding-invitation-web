@@ -4,6 +4,7 @@ import Countdown from '@/components/public/Countdown';
 import RSVPForm from '@/components/public/RSVPForm';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { formatDate } from '@/lib/utils';
+import SaveTheDate from '@/components/public/SaveTheDate';
 import type { PublicInvitation, RSVP } from '@/types';
 import type { Guest } from '@/services/guest.service';
 
@@ -80,9 +81,11 @@ export default function TemplateMidnightGold({ invitation, guestData, guestLoadi
           <p className="text-yellow-400/50 text-xs tracking-[0.4em] uppercase mb-6">Undangan Pernikahan</p>
 
           <h1>
-            <span className="block text-5xl md:text-6xl font-bold text-white leading-tight">{invitation.groom_name}</span>
+            <span className="block text-5xl md:text-6xl font-bold text-white leading-tight">{invitation.bride_nickname || invitation.bride_name}</span>
+            {invitation.bride_nickname && <span className="block text-slate-400/50 text-sm mt-1">{invitation.bride_name}</span>}
             <span className="block text-yellow-400 text-3xl my-3">✦</span>
-            <span className="block text-5xl md:text-6xl font-bold text-white leading-tight">{invitation.bride_name}</span>
+            <span className="block text-5xl md:text-6xl font-bold text-white leading-tight">{invitation.groom_nickname || invitation.groom_name}</span>
+            {invitation.groom_nickname && <span className="block text-slate-400/50 text-sm mt-1">{invitation.groom_name}</span>}
           </h1>
 
           {invitation.custom_message && (
@@ -90,9 +93,55 @@ export default function TemplateMidnightGold({ invitation, guestData, guestLoadi
           )}
 
           <p className="text-yellow-300/60 text-sm mt-4">{formatDate(invitation.resepsi_date)}</p>
+          <div className="mt-4">
+            <SaveTheDate
+              groomName={invitation.groom_name}
+              brideName={invitation.bride_name}
+              resepsiDate={invitation.resepsi_date}
+              resepsiLocation={invitation.resepsi_location}
+              className="border-yellow-400/40 text-yellow-300/80 hover:border-yellow-400 hover:text-yellow-300"
+            />
+          </div>
 
           <div className="mt-10">
             <Countdown targetDate={invitation.resepsi_date} />
+          </div>
+        </div>
+      </section>
+
+      {/* Profil Pengantin */}
+      <section className="py-16 px-6" style={{ background: '#0f0f2e' }}>
+        <div className="max-w-2xl mx-auto">
+          <div className="text-center mb-10">
+            <p className="text-yellow-400/50 text-xs tracking-widest uppercase mb-2">Mempelai</p>
+            <h2 className="text-3xl font-bold text-white">Yang Berbahagia</h2>
+            <div className="flex items-center gap-3 justify-center mt-3">
+              <div className="h-px flex-1 max-w-16 bg-yellow-400/30" />
+              <span className="text-yellow-400/50 text-xs">✦</span>
+              <div className="h-px flex-1 max-w-16 bg-yellow-400/30" />
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-8">
+            <div className="text-center">
+              <div className="w-32 h-32 mx-auto rounded-full border-4 overflow-hidden mb-4 bg-slate-800" style={{ borderColor: 'rgba(212,175,55,0.4)' }}>
+                {invitation.bride_photo
+                  ? <img src={invitation.bride_photo} alt={invitation.bride_name} className="w-full h-full object-cover" />
+                  : <div className="w-full h-full flex items-center justify-center text-yellow-400/40 text-4xl">✦</div>
+                }
+              </div>
+              <p className="text-white font-bold text-xl">{invitation.bride_nickname || invitation.bride_name}</p>
+              {invitation.bride_nickname && <p className="text-slate-400/50 text-xs mt-1">{invitation.bride_name}</p>}
+            </div>
+            <div className="text-center">
+              <div className="w-32 h-32 mx-auto rounded-full border-4 overflow-hidden mb-4 bg-slate-800" style={{ borderColor: 'rgba(212,175,55,0.4)' }}>
+                {invitation.groom_photo
+                  ? <img src={invitation.groom_photo} alt={invitation.groom_name} className="w-full h-full object-cover" />
+                  : <div className="w-full h-full flex items-center justify-center text-yellow-400/40 text-4xl">☽</div>
+                }
+              </div>
+              <p className="text-white font-bold text-xl">{invitation.groom_nickname || invitation.groom_name}</p>
+              {invitation.groom_nickname && <p className="text-slate-400/50 text-xs mt-1">{invitation.groom_name}</p>}
+            </div>
           </div>
         </div>
       </section>
@@ -233,7 +282,7 @@ export default function TemplateMidnightGold({ invitation, guestData, guestLoadi
       {/* Footer */}
       <footer className="py-10 px-6 text-center" style={{ background: '#050510' }}>
         <p className="text-yellow-400/50 text-lg mb-1">✦ ☽ ✦</p>
-        <p className="text-2xl font-bold text-white">{invitation.groom_name} & {invitation.bride_name}</p>
+        <p className="text-2xl font-bold text-white">{invitation.bride_name} & {invitation.groom_name}</p>
         <div className="flex items-center gap-3 justify-center mt-3 mb-3">
           <div className="h-px flex-1 max-w-16 bg-yellow-400/20" />
           <span className="text-yellow-400/30 text-xs">✦</span>

@@ -53,7 +53,7 @@ export default function AnalyticsPage() {
           {invitations?.map((inv) => (
             <Card key={inv.id}>
               <CardHeader>
-                <p className="font-semibold text-gray-900">{inv.groom_name} & {inv.bride_name}</p>
+                <p className="font-semibold text-gray-900">{inv.bride_name} & {inv.groom_name}</p>
                 <p className="text-sm text-gray-500 mt-0.5">/{inv.slug}</p>
               </CardHeader>
               <CardContent>

@@ -33,7 +33,7 @@ function InvitationTable({ invitations, showDelete = true }: { invitations: Invi
       <ConfirmModal
         open={!!deleteTarget}
         title="Hapus undangan ini?"
-        description={deleteTarget ? `${deleteTarget.groom_name} & ${deleteTarget.bride_name}` : ''}
+        description={deleteTarget ? `${deleteTarget.bride_name} & ${deleteTarget.groom_name}` : ''}
         loading={deleteMutation.isPending}
         onConfirm={() => {
           if (deleteTarget) deleteMutation.mutate(deleteTarget.id, { onSuccess: () => setDeleteTarget(null) });
@@ -46,11 +46,11 @@ function InvitationTable({ invitations, showDelete = true }: { invitations: Invi
           <div key={inv.id} className="flex items-center justify-between px-5 py-4 border-b border-gray-50 last:border-0 hover:bg-gray-50/50 transition-colors">
             <div className="flex items-center gap-3 flex-1 min-w-0">
               <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-rose-400 to-pink-500 flex items-center justify-center text-white text-xs font-bold shrink-0">
-                {inv.groom_name[0]}{inv.bride_name[0]}
+                {inv.bride_name[0]}{inv.groom_name[0]}
               </div>
               <div className="min-w-0">
                 <div className="flex items-center gap-2">
-                  <p className="font-medium text-gray-900 text-sm truncate">{inv.groom_name} & {inv.bride_name}</p>
+                  <p className="font-medium text-gray-900 text-sm truncate">{inv.bride_name} & {inv.groom_name}</p>
                   <Badge variant={inv.status === 'published' ? 'success' : 'warning'}>
                     {inv.status === 'published' ? 'Publik' : 'Draft'}
                   </Badge>

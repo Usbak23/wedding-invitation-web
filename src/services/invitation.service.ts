@@ -3,7 +3,11 @@ import type { Invitation, ApiResponse } from '@/types';
 
 export type InvitationPayload = {
   groom_name: string;
+  groom_nickname?: string | null;
+  groom_photo?: string | null;
   bride_name: string;
+  bride_nickname?: string | null;
+  bride_photo?: string | null;
   akad_date?: string | null;
   akad_location?: string | null;
   akad_maps_url?: string | null;
