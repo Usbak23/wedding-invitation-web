@@ -3,6 +3,7 @@ import { MapPin, Calendar } from 'lucide-react';
 import Countdown from '@/components/public/Countdown';
 import RSVPForm from '@/components/public/RSVPForm';
 import AdabWalimah from '@/components/public/AdabWalimah';
+import GiftSection from '@/components/public/GiftSection';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { formatDate } from '@/lib/utils';
 import SaveTheDate from '@/components/public/SaveTheDate';
@@ -258,6 +259,7 @@ export default function TemplateEmerald({ invitation, guestData, guestLoading, g
       </section>
 
       <AdabWalimah theme="dark" accentColor="#4ade80" />
+      <GiftSection bankAccounts={invitation.bankAccounts ?? []} theme="dark" accentColor="#4ade80" />
 
       {/* RSVP */}
       <section className="py-16 px-6" style={{ background: '#0d2b0d' }}>

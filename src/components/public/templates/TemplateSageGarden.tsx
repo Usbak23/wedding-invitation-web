@@ -3,6 +3,7 @@ import { MapPin, Calendar } from 'lucide-react';
 import Countdown from '@/components/public/Countdown';
 import RSVPForm from '@/components/public/RSVPForm';
 import AdabWalimah from '@/components/public/AdabWalimah';
+import GiftSection from '@/components/public/GiftSection';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { formatDate } from '@/lib/utils';
 import SaveTheDate from '@/components/public/SaveTheDate';
@@ -241,6 +242,7 @@ export default function TemplateSageGarden({ invitation, guestData, guestLoading
       </section>
 
       <AdabWalimah theme="light" accentColor="#65a30d" />
+      <GiftSection bankAccounts={invitation.bankAccounts ?? []} theme="light" accentColor="#65a30d" />
 
       {/* RSVP */}
       <section className="py-16 px-6" style={{ background: '#eee8d8' }}>

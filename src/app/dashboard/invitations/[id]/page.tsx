@@ -1,14 +1,14 @@
 'use client';
-import { use } from 'react';
+import { use, useState } from 'react';
 import Link from 'next/link';
-import { ExternalLink, Copy, Globe, Check } from 'lucide-react';
-import { useState } from 'react';
+import { ExternalLink, Copy, Globe, Check, Trash2, Plus } from 'lucide-react';
 import { useInvitation, useUpdateInvitation, usePublishInvitation } from '@/hooks/useInvitations';
 import { useRSVPs } from '@/hooks/useRSVP';
+import { useBankAccounts, useCreateBankAccount, useDeleteBankAccount } from '@/hooks/useBankAccounts';
 import InvitationForm from '@/components/dashboard/InvitationForm';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { Badge } from '@/components/ui/Badge';
-import { Card, CardContent, CardHeader } from '@/components/ui/Card';
+import { Card, CardHeader } from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
 import type { InvitationPayload } from '@/services/invitation.service';
 import toast from 'react-hot-toast';
@@ -20,6 +20,12 @@ export default function InvitationDetailPage({ params }: { params: Promise<{ id:
   const updateMutation = useUpdateInvitation(id);
   const publishMutation = usePublishInvitation();
   const [copied, setCopied] = useState(false);
+
+  const { data: bankAccounts } = useBankAccounts(id);
+  const createBankAccount = useCreateBankAccount(id);
+  const deleteBankAccount = useDeleteBankAccount(id);
+  const [baForm, setBaForm] = useState({ bank_name: '', account_name: '', account_number: '' });
+  const [showBaForm, setShowBaForm] = useState(false);
 
   if (isLoading) return (
     <div className="space-y-4">
@@ -118,6 +124,80 @@ export default function InvitationDetailPage({ params }: { params: Promise<{ id:
           </div>
         </Card>
       )}
+
+      {/* Bank Accounts */}
+      <div>
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-lg font-semibold text-gray-900">Rekening / E-Wallet</h2>
+          <button
+            onClick={() => setShowBaForm((v) => !v)}
+            className="flex items-center gap-1.5 text-sm text-rose-500 hover:text-rose-600 font-medium"
+          >
+            <Plus className="h-4 w-4" />Tambah
+          </button>
+        </div>
+
+        {showBaForm && (
+          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 mb-4 space-y-3">
+            <input
+              placeholder="Nama Bank / E-Wallet (contoh: BCA, GoPay)"
+              value={baForm.bank_name}
+              onChange={(e) => setBaForm((f) => ({ ...f, bank_name: e.target.value }))}
+              className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-rose-300"
+            />
+            <input
+              placeholder="Nama Pemilik Rekening"
+              value={baForm.account_name}
+              onChange={(e) => setBaForm((f) => ({ ...f, account_name: e.target.value }))}
+              className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-rose-300"
+            />
+            <input
+              placeholder="Nomor Rekening / No. HP"
+              value={baForm.account_number}
+              onChange={(e) => setBaForm((f) => ({ ...f, account_number: e.target.value }))}
+              className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-rose-300"
+            />
+            <div className="flex gap-2 justify-end">
+              <button onClick={() => setShowBaForm(false)} className="text-sm text-gray-400 px-4 py-2">Batal</button>
+              <Button
+                loading={createBankAccount.isPending}
+                disabled={!baForm.bank_name || !baForm.account_name || !baForm.account_number}
+                onClick={() => {
+                  createBankAccount.mutate(baForm, {
+                    onSuccess: () => {
+                      setBaForm({ bank_name: '', account_name: '', account_number: '' });
+                      setShowBaForm(false);
+                    },
+                  });
+                }}
+              >
+                Simpan
+              </Button>
+            </div>
+          </div>
+        )}
+
+        {bankAccounts && bankAccounts.length > 0 ? (
+          <div className="space-y-2">
+            {bankAccounts.map((ba) => (
+              <div key={ba.id} className="bg-white rounded-2xl border border-gray-100 shadow-sm px-5 py-4 flex items-center justify-between gap-4">
+                <div>
+                  <p className="text-sm font-semibold text-gray-900">{ba.bank_name}</p>
+                  <p className="text-xs text-gray-400">{ba.account_name} · {ba.account_number}</p>
+                </div>
+                <button
+                  onClick={() => deleteBankAccount.mutate(ba.id)}
+                  className="text-gray-300 hover:text-red-400 transition-colors"
+                >
+                  <Trash2 className="h-4 w-4" />
+                </button>
+              </div>
+            ))}
+          </div>
+        ) : (
+          !showBaForm && <p className="text-sm text-gray-400">Belum ada rekening. Klik Tambah untuk menambahkan.</p>
+        )}
+      </div>
 
       {/* Edit Form */}
       <div>

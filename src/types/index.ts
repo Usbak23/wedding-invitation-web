@@ -79,8 +79,18 @@ export interface Analytics {
   totalViews: number;
 }
 
+export interface BankAccount {
+  id: string;
+  bank_name: string;
+  account_name: string;
+  account_number: string;
+  logo_url?: string;
+  order_index: number;
+}
+
 export interface PublicInvitation extends Invitation {
   rsvps?: RSVP[];
+  bankAccounts?: BankAccount[];
 }
 
 export interface ApiResponse<T> {
