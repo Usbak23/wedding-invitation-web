@@ -27,4 +27,6 @@ export const guestService = {
       .then((r) => r.data.data),
   create: (invitationId: string, payload: { name: string; phone?: string }) =>
     api.post<ApiResponse<Guest>>(`/invitations/${invitationId}/guests`, payload).then((r) => r.data.data),
+  bulkCreate: (invitationId: string, guests: { name: string; phone?: string }[]) =>
+    api.post<ApiResponse<Guest[]>>(`/invitations/${invitationId}/guests/bulk`, { guests }).then((r) => r.data.data),
 };

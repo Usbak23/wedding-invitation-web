@@ -21,3 +21,15 @@ export function useCreateGuest(invitationId: string) {
     onError: () => toast.error('Gagal menambahkan tamu.'),
   });
 }
+
+export function useBulkCreateGuests(invitationId: string) {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (guests: { name: string; phone?: string }[]) => guestService.bulkCreate(invitationId, guests),
+    onSuccess: (data) => {
+      qc.invalidateQueries({ queryKey: ['guests', invitationId] });
+      toast.success(`${data.length} tamu berhasil diimport!`);
+    },
+    onError: () => toast.error('Gagal import tamu.'),
+  });
+}

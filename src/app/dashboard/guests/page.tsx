@@ -1,8 +1,10 @@
 'use client';
 import { useState } from 'react';
-import { Users, Plus, QrCode } from 'lucide-react';
+import { Users, Plus, QrCode, Upload } from 'lucide-react';
 import { useInvitations } from '@/hooks/useInvitations';
-import { useGuests, useCreateGuest } from '@/hooks/useGuests';
+import { useGuests, useCreateGuest, useBulkCreateGuests } from '@/hooks/useGuests';
+import * as XLSX from 'xlsx';
+import toast from 'react-hot-toast';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { Card, CardContent, CardHeader } from '@/components/ui/Card';
 import Pagination from '@/components/ui/Pagination';
@@ -21,6 +23,7 @@ function GuestList({ invitation }: { invitation: Invitation }) {
   const [page, setPage] = useState(1);
   const { data, isLoading } = useGuests(invitation.id, page);
   const { mutateAsync, isPending } = useCreateGuest(invitation.id);
+  const bulkCreate = useBulkCreateGuests(invitation.id);
   const [form, setForm] = useState({ name: '', phone: '' });
   const [open, setOpen] = useState(false);
   const [qrTarget, setQrTarget] = useState<QRTarget | null>(null);
@@ -30,6 +33,31 @@ function GuestList({ invitation }: { invitation: Invitation }) {
     await mutateAsync({ name: form.name, phone: form.phone || undefined });
     setForm({ name: '', phone: '' });
     setOpen(false);
+  };
+
+  const handleDownloadTemplate = () => {
+    const ws = XLSX.utils.aoa_to_sheet([['nama', 'phone'], ['Budi Santoso', '08123456789'], ['Siti Aminah', '08987654321']]);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Tamu');
+    XLSX.writeFile(wb, 'template-tamu.xlsx');
+  };
+
+  const handleImportExcel = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (evt) => {
+      const wb = XLSX.read(evt.target?.result, { type: 'array' });
+      const ws = wb.Sheets[wb.SheetNames[0]];
+      const rows = XLSX.utils.sheet_to_json<{ nama?: string; name?: string; phone?: string; hp?: string; telepon?: string }>(ws);
+      const guests = rows
+        .map((r) => ({ name: (r.nama || r.name || '').trim(), phone: (r.phone || r.hp || r.telepon || '').trim() || undefined }))
+        .filter((g) => g.name);
+      if (guests.length === 0) { toast.error('File kosong atau kolom "nama" tidak ditemukan.'); return; }
+      bulkCreate.mutate(guests);
+    };
+    reader.readAsArrayBuffer(file);
+    e.target.value = '';
   };
 
   if (isLoading) return <Skeleton className="h-32" />;
@@ -106,9 +134,18 @@ function GuestList({ invitation }: { invitation: Invitation }) {
         )}
 
         {!open && (
-          <Button variant="ghost" size="sm" onClick={() => setOpen(true)}>
-            <Plus className="h-4 w-4" />Tambah Tamu
-          </Button>
+          <div className="flex gap-2">
+            <Button variant="ghost" size="sm" onClick={() => setOpen(true)}>
+              <Plus className="h-4 w-4" />Tambah Tamu
+            </Button>
+            <label className="inline-flex items-center gap-1.5 text-sm font-medium text-rose-500 hover:text-rose-600 cursor-pointer px-3 py-1.5 rounded-lg hover:bg-rose-50 transition-colors">
+              <Upload className="h-4 w-4" />Import Excel
+              <input type="file" accept=".xlsx,.xls,.csv" onChange={handleImportExcel} className="hidden" />
+            </label>
+            <Button variant="ghost" size="sm" onClick={handleDownloadTemplate}>
+              Download Template
+            </Button>
+          </div>
         )}
       </div>
     </>
