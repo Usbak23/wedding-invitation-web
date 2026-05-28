@@ -130,7 +130,7 @@ export default function TemplateEmerald({ invitation, guestData, guestLoading, g
             </p>
           </div>
 
-          <div className="grid grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {/* Wanita */}
             <div className="text-center">
               <div className="w-36 h-36 mx-auto rounded-full border-4 border-yellow-400/40 overflow-hidden mb-4 bg-emerald-900">

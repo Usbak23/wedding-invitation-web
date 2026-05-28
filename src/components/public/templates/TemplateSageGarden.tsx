@@ -121,7 +121,7 @@ export default function TemplateSageGarden({ invitation, guestData, guestLoading
             </p>
           </div>
 
-          <div className="grid grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="text-center">
               <div className="w-36 h-36 mx-auto rounded-full border-4 border-stone-300 overflow-hidden mb-4 bg-stone-200">
                 {invitation.bride_photo

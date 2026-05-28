@@ -138,7 +138,7 @@ export default function TemplateMidnightGold({ invitation, guestData, guestLoadi
             </p>
           </div>
 
-          <div className="grid grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="text-center">
               <div className="w-36 h-36 mx-auto rounded-full border-4 overflow-hidden mb-4 bg-slate-800" style={{ borderColor: 'rgba(212,175,55,0.4)' }}>
                 {invitation.bride_photo
