@@ -2,6 +2,7 @@
 import { MapPin, Calendar } from 'lucide-react';
 import Countdown from '@/components/public/Countdown';
 import RSVPForm from '@/components/public/RSVPForm';
+import AdabWalimah from '@/components/public/AdabWalimah';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { formatDate } from '@/lib/utils';
 import SaveTheDate from '@/components/public/SaveTheDate';
@@ -253,6 +254,8 @@ export default function TemplateMidnightGold({ invitation, guestData, guestLoadi
           )}
         </div>
       </section>
+
+      <AdabWalimah theme="dark" accentColor="#fbbf24" />
 
       {/* RSVP */}
       <section className="py-16 px-6" style={{ background: '#0f0f2e' }}>
