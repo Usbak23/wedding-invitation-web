@@ -313,7 +313,7 @@ export default function TemplateEmerald({ invitation, guestData, guestLoading, g
       <footer className="py-10 px-6 text-center" style={{ background: '#052e16' }}>
         <p className="text-yellow-400/60 text-lg mb-1">☽ ✦ ☾</p>
         <p className="text-2xl font-bold text-white">{invitation.bride_nickname || invitation.bride_name} & {invitation.groom_nickname || invitation.groom_name}</p>
-        <p className="text-emerald-200/30 text-xs">Dibuat dengan ♥ WeddingInvite</p>
+        <p className="text-emerald-200/30 text-xs">©️ 2026 Ahmad Mubarok — Innovative Digital Solutions.</p>
       </footer>
     </div>
   );

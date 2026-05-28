@@ -297,7 +297,7 @@ export default function TemplateSageGarden({ invitation, guestData, guestLoading
         <p className="text-amber-200/60 text-lg mb-1">❀</p>
         <p className="text-2xl font-bold text-white">{invitation.bride_nickname || invitation.bride_name} & {invitation.groom_nickname || invitation.groom_name}</p>
         <FloralDivider className="text-white/30 mt-3 mb-3" />
-        <p className="text-white/30 text-xs">Dibuat dengan ♥ WeddingInvite</p>
+        <p className="text-white/30 text-xs">©️ 2026 Ahmad Mubarok — Innovative Digital Solutions.</p>
       </footer>
     </div>
   );

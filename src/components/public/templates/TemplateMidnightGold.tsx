@@ -309,7 +309,7 @@ export default function TemplateMidnightGold({ invitation, guestData, guestLoadi
       <footer className="py-10 px-6 text-center" style={{ background: '#050510' }}>
         <p className="text-yellow-400/50 text-lg mb-1">✦ ☽ ✦</p>
         <p className="text-2xl font-bold text-white">{invitation.bride_nickname || invitation.bride_name} & {invitation.groom_nickname || invitation.groom_name}</p>
-        <p className="text-slate-500/40 text-xs">Dibuat dengan ♥ WeddingInvite</p>
+        <p className="text-slate-500/40 text-xs">©️ 2026 Ahmad Mubarok — Innovative Digital Solutions.</p>
       </footer>
     </div>
   );
