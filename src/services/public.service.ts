@@ -8,6 +8,7 @@ export interface GuestWithInvitation {
     name: string;
     code: string;
     phone?: string;
+    created_at: string;
     rsvp: {
       id: string;
       status: string;
