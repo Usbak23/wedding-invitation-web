@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Button from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
+import FileUpload from '@/components/ui/FileUpload';
 import DateTimePicker from '@/components/ui/DateTimePicker';
 import { Card, CardContent, CardHeader } from '@/components/ui/Card';
 import type { Invitation } from '@/types';
@@ -113,18 +114,18 @@ export default function InvitationForm({ defaultValues, onSubmit, loading }: Inv
             <Input label="Nama Lengkap Mempelai Pria *" value={form.groom_name} onChange={set('groom_name')} required />
             <Input label="Nama Panggilan Pria" value={form.groom_nickname} onChange={set('groom_nickname')} placeholder="cth: Rijal" />
           </div>
-          <Input label="Foto Mempelai Pria (URL)" value={form.groom_photo} onChange={set('groom_photo')} placeholder="https://..." />
+          <FileUpload label="Foto Mempelai Pria" value={form.groom_photo} onChange={(url) => setForm((f) => ({ ...f, groom_photo: url }))} accept="image/*" />
           <Input label="Bio Mempelai Pria" value={form.groom_bio} onChange={set('groom_bio')} placeholder="Putra pertama dari Bapak ... dan Ibu ..." />
           <Input label="Instagram Pria" value={form.groom_instagram} onChange={set('groom_instagram')} placeholder="username (tanpa @)" />
           <div className="grid grid-cols-2 gap-4">
             <Input label="Nama Lengkap Mempelai Wanita *" value={form.bride_name} onChange={set('bride_name')} required />
             <Input label="Nama Panggilan Wanita" value={form.bride_nickname} onChange={set('bride_nickname')} placeholder="cth: Lutfi" />
           </div>
-          <Input label="Foto Mempelai Wanita (URL)" value={form.bride_photo} onChange={set('bride_photo')} placeholder="https://..." />
+          <FileUpload label="Foto Mempelai Wanita" value={form.bride_photo} onChange={(url) => setForm((f) => ({ ...f, bride_photo: url }))} accept="image/*" />
           <Input label="Bio Mempelai Wanita" value={form.bride_bio} onChange={set('bride_bio')} placeholder="Putri kelima dari Bapak ... dan Ibu ..." />
           <Input label="Instagram Wanita" value={form.bride_instagram} onChange={set('bride_instagram')} placeholder="username (tanpa @)" />
-          <Input label="Cover Photo URL" value={form.cover_photo} onChange={set('cover_photo')} placeholder="https://..." />
-          <Input label="Music URL" value={form.music_url} onChange={set('music_url')} placeholder="https://..." />
+          <FileUpload label="Cover Photo" value={form.cover_photo} onChange={(url) => setForm((f) => ({ ...f, cover_photo: url }))} accept="image/*" />
+          <FileUpload label="Background Music" value={form.music_url} onChange={(url) => setForm((f) => ({ ...f, music_url: url }))} accept="audio/*" />
           <div className="flex flex-col gap-1">
             <label className="text-sm font-medium text-gray-700">Pesan Undangan</label>
             <textarea

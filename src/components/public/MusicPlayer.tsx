@@ -1,33 +1,36 @@
 'use client';
 import { useState, useRef, useEffect } from 'react';
-import { Music, Pause, Play } from 'lucide-react';
+import { Music } from 'lucide-react';
 
 export default function MusicPlayer({ url }: { url: string }) {
   const audioRef = useRef<HTMLAudioElement>(null);
   const [playing, setPlaying] = useState(false);
-  const [ready, setReady] = useState(false);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
     const audio = audioRef.current;
-    if (!audio) return;
-    audio.addEventListener('canplay', () => setReady(true));
-    // Auto play on load
-    audio.play().then(() => setPlaying(true)).catch(() => {});
-  }, []);
+    if (!audio || !url) return;
+    audio.addEventListener('canplay', () => {
+      audio.play().then(() => setPlaying(true)).catch(() => {});
+    }, { once: true });
+    audio.addEventListener('error', () => setError(true), { once: true });
+  }, [url]);
+
+  if (!url || error) return null;
 
   const toggle = () => {
     const audio = audioRef.current;
     if (!audio) return;
     if (playing) { audio.pause(); setPlaying(false); }
-    else { audio.play(); setPlaying(true); }
+    else { audio.play().then(() => setPlaying(true)).catch(() => setError(true)); }
   };
 
   return (
     <>
-      <audio ref={audioRef} src={url} loop />
+      <audio ref={audioRef} src={url} loop preload="auto" />
       <button
         onClick={toggle}
-        className="fixed bottom-6 right-6 z-50 w-12 h-12 rounded-full bg-white shadow-lg border border-gray-200 flex items-center justify-center hover:scale-110 transition-transform"
+        className="fixed bottom-6 right-6 z-50 w-12 h-12 rounded-full bg-white/90 backdrop-blur shadow-lg border border-gray-200 flex items-center justify-center hover:scale-110 transition-transform"
         title={playing ? 'Pause musik' : 'Play musik'}
       >
         {playing ? (
