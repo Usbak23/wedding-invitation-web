@@ -13,7 +13,8 @@ api.interceptors.response.use(
       const url = error.config?.url || '';
       const isAuthRoute = url.includes('/auth/');
       const isPublicRoute = url.includes('/public/');
-      if (!isAuthRoute && !isPublicRoute) window.location.href = '/login';
+      const isPublicPage = window.location.pathname !== '/login' && window.location.pathname !== '/register' && !window.location.pathname.startsWith('/dashboard');
+      if (!isAuthRoute && !isPublicRoute && !isPublicPage) window.location.href = '/login';
     }
     return Promise.reject(error);
   }

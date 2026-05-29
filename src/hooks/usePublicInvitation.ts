@@ -17,3 +17,11 @@ export function useGuestByCode(slug: string, code: string) {
     retry: false,
   });
 }
+
+export function usePublicRSVPs(slug: string) {
+  return useQuery({
+    queryKey: ['public', slug, 'rsvps'],
+    queryFn: () => publicService.getRsvps(slug),
+    enabled: !!slug,
+  });
+}

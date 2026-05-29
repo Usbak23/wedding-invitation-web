@@ -1,8 +1,7 @@
 'use client';
 import { use, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { usePublicInvitation, useGuestByCode } from '@/hooks/usePublicInvitation';
-import { useRSVPs } from '@/hooks/useRSVP';
+import { usePublicInvitation, useGuestByCode, usePublicRSVPs } from '@/hooks/usePublicInvitation';
 import { Skeleton } from '@/components/ui/Skeleton';
 import MusicPlayer from '@/components/public/MusicPlayer';
 import OpeningScreen from '@/components/public/OpeningScreen';
@@ -28,7 +27,7 @@ export default function PublicInvitationPage({ params }: { params: Promise<{ slu
 
   const { data: invitation, isLoading, isError } = usePublicInvitation(slug);
   const { data: guestData, isLoading: guestLoading, isError: guestError } = useGuestByCode(slug, code);
-  const { data: rsvps } = useRSVPs(invitation?.id ?? '');
+  const { data: rsvps } = usePublicRSVPs(slug);
 
   if (isLoading) {
     return (

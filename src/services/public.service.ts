@@ -1,5 +1,5 @@
 import api from '@/lib/axios';
-import type { Invitation, ApiResponse } from '@/types';
+import type { Invitation, RSVP, ApiResponse } from '@/types';
 
 export interface GuestWithInvitation {
   invitation: Invitation;
@@ -24,4 +24,6 @@ export const publicService = {
     api.get<ApiResponse<Invitation>>(`/public/${slug}`).then((r) => r.data.data),
   getGuestByCode: (slug: string, code: string) =>
     api.get<ApiResponse<GuestWithInvitation>>(`/public/${slug}/guests/${code}`).then((r) => r.data.data),
+  getRsvps: (slug: string) =>
+    api.get<ApiResponse<RSVP[]>>(`/public/${slug}/rsvps`).then((r) => r.data.data),
 };
