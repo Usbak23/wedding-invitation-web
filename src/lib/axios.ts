@@ -10,8 +10,10 @@ api.interceptors.response.use(
   (res) => res,
   (error) => {
     if (error.response?.status === 401 && typeof window !== 'undefined') {
-      const isAuthRoute = error.config?.url?.includes('/auth/');
-      if (!isAuthRoute) window.location.href = '/login';
+      const url = error.config?.url || '';
+      const isAuthRoute = url.includes('/auth/');
+      const isPublicRoute = url.includes('/public/');
+      if (!isAuthRoute && !isPublicRoute) window.location.href = '/login';
     }
     return Promise.reject(error);
   }
