@@ -245,10 +245,10 @@ export default function TemplateMidnightGold({ invitation, guestData, guestLoadi
             )}
           </div>
 
-          {invitation.resepsi_location && (
+          {invitation.resepsi_maps_url && (
             <div className="mt-6 rounded-2xl overflow-hidden h-56" style={{ border: '1px solid rgba(212,175,55,0.2)' }}>
               <iframe
-                src={`https://maps.google.com/maps?q=${encodeURIComponent(invitation.resepsi_location)}&output=embed`}
+                src={`https://maps.google.com/maps?q=${encodeURIComponent(invitation.resepsi_maps_url)}&output=embed`}
                 className="w-full h-full border-0" loading="lazy"
               />
             </div>

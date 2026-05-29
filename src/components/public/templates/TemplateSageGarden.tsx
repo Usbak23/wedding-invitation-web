@@ -230,10 +230,10 @@ export default function TemplateSageGarden({ invitation, guestData, guestLoading
             )}
           </div>
 
-          {invitation.resepsi_location && (
+          {invitation.resepsi_maps_url && (
             <div className="mt-6 rounded-2xl overflow-hidden h-56 border border-stone-200 shadow-sm">
               <iframe
-                src={`https://maps.google.com/maps?q=${encodeURIComponent(invitation.resepsi_location)}&output=embed`}
+                src={`https://maps.google.com/maps?q=${encodeURIComponent(invitation.resepsi_maps_url)}&output=embed`}
                 className="w-full h-full border-0" loading="lazy"
               />
             </div>
