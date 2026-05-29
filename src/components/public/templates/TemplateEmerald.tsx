@@ -250,7 +250,7 @@ export default function TemplateEmerald({ invitation, guestData, guestLoading, g
           {invitation.resepsi_maps_url && (
             <div className="mt-6 rounded-2xl overflow-hidden h-56 border border-yellow-400/20">
               <iframe
-                src={`https://maps.google.com/maps?q=${encodeURIComponent(invitation.resepsi_maps_url)}&output=embed`}
+                src={`https://maps.google.com/maps?q=${encodeURIComponent(invitation.resepsi_location || '')}&output=embed`}
                 className="w-full h-full border-0" loading="lazy"
               />
             </div>
