@@ -277,7 +277,7 @@ export default function TemplateEmerald({ invitation, guestData, guestLoading, g
             ) : guestError || !guestData ? (
               <p className="text-center text-sm text-red-400 py-4">Kode tamu tidak valid.</p>
             ) : (
-              <RSVPForm guestId={guestData.guest.id} invitationId={invitation.id} guestName={guestData.guest.name} existingRsvp={guestData.guest.rsvp} />
+              <RSVPForm guestId={guestData.guest.id} invitationId={invitation.id} guestName={guestData.guest.name} existingRsvp={guestData.guest.rsvp} theme="dark" />
             )}
           </div>
         </div>
